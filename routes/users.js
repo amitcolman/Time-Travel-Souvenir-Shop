@@ -3,8 +3,9 @@ const router = express.Router();
 const userController = require('../src/controllers/userController');
 const authVerifier = require('../src/controllers/authAdminVerifier');
 
-// Route for creating a user
+// Routes
 router.post('/create', authVerifier, userController.createUser);
+router.get('/get', authVerifier, userController.getUser);
 
 // Route for creating an admin session - for testing purposes ONLY
 router.get('/get-admin-session', (req, res) => {

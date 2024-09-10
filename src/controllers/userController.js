@@ -37,6 +37,16 @@ const userController = {
             console.error('Error creating user:', error);
             res.status(500).send({status: 'Error', message: 'Error creating user'});
         });
+    },
+
+    async getUser(req, res) {
+        const user = await UserModel.findOne({ username: req.body.username });
+        if (!user) {
+            res.status(404).send({status: 'Error', message: 'User not found'});
+            return;
+        }
+
+        res.status(200).send({status: 'Success', user: user});
     }
 }
 
