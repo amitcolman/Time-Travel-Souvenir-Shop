@@ -70,7 +70,16 @@ const itemController = {
             console.error('Error deleting item:', error);
             res.status(500).send({status: 'Error', message: 'Error deleting item'});
         }
-    }
+    },
+    async listItems(req, res) {
+        const items = await itemModel.find({});
+        if (!items) {
+            res.status(404).send({status: 'Error', message: 'No items found'});
+            return;
+        }
+        res.status(200).send({status: 'Success', item: items});
+    },
+
 }
 
 module.exports = itemController;
