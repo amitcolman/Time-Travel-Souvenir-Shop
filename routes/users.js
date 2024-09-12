@@ -5,7 +5,7 @@ const authUserVerifier = require('../src/controllers/authUserVerifier');
 const authAdminVerifier = require('../src/controllers/authAdminVerifier');
 
 // Routes
-router.post('/create', authAdminVerifier, userController.createUser);
+router.post('/create', userController.createUser);
 router.get('/get', authAdminVerifier, userController.getUser);
 router.post('/login', userController.loginUser);
 router.get('/logout', authUserVerifier, userController.logoutUser);
