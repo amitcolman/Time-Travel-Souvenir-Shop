@@ -9,6 +9,7 @@ router.post('/create', userController.createUser);
 router.get('/get', authAdminVerifier, userController.getUser);
 router.post('/login', userController.loginUser);
 router.get('/logout', authUserVerifier, userController.logoutUser);
+router.get('/get-session', userController.getSession);
 router.post('/update-password', authUserVerifier, userController.updateUserPassword);
 router.post('/delete', authAdminVerifier, userController.deleteUser);
 

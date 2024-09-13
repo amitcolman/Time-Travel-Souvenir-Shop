@@ -68,6 +68,14 @@ const userController = {
         res.status(200).send({status: 'Success', message: 'User logged out'});
     },
 
+    async getSession(req, res) {
+        if (req.session.user) {
+            res.status(200).send({status: 'Success', message: 'Session found', user: req.session.user});
+        } else {
+            res.status(404).send({status: 'Error', message: 'Session not found'});
+        }
+    },
+
     async deleteUser(req, res) {
         const user = await UserModel.findOneAndDelete({ username: req.body.username });
         if (!user) {

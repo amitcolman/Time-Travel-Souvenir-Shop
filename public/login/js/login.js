@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-async function login() {
+async function login(event) {
 
     event.preventDefault();
 
@@ -13,7 +13,7 @@ async function login() {
     const errorMessage = document.getElementById("error-message");
 
     try {
-        const response = await fetch("http://localhost:3000/users/login", {
+        const response = await fetch("/users/login", {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -25,12 +25,11 @@ async function login() {
             })
         });
 
-       alert(response.ok)
-
         // Check if the response is successful
         if (response.ok) {
             const data = await response.json();
-            alert("Log-in successful!");
+            // Redirect to home page
+            window.location.href = "/";
         } else {
             const errorData = await response.json();
             errorMessage.textContent = `Error: ${errorData.message}`;
