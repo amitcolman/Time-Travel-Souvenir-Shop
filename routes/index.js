@@ -18,4 +18,15 @@ router.get('/signup', function(req, res, next) {
   res.sendFile(path.join(__dirname, '../views/signup.html'));
 });
 
+router.get('/checkout', function(req, res, next) {
+    res.sendFile(path.join(__dirname, '../views/checkout.html'));
+});
+
+router.get('/orderconfirm', function(req, res, next) {
+    res.sendFile(path.join(__dirname, '../views/orderconfirm.html'));
+});
+
+
+
+
 module.exports = router;

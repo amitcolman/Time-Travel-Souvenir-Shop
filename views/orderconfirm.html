@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/checkout/css/confirm.css">
+    <script defer src="/checkout/js/confirm.js"></script>
+    <title>Order Confirmation</title>
+</head>
+<body>
+<div class="confirmation-container">
+    <h2>Order Confirmation</h2>
+    <p class="center">Thank you for your order! Your order number is <strong>#<span id="orderId"></span></strong>.</p>
+
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        <p><strong>Name:</strong> <span id="name"></span></p>
+        <p><strong>Address:</strong> <span id="address"></span> <span id="city"> </span><span id="country"></span></p>
+
+    </div>
+
+    <button onclick="window.location.href='/'">Continue Shopping</button>
+</div>
+<script>
+    const formData = JSON.parse(localStorage.getItem('checkoutData'));
+
+
+    if (formData) {
+        document.getElementById('name').textContent = formData.name;
+        document.getElementById('address').textContent = formData.address;
+        document.getElementById('city').textContent = formData.city;
+        document.getElementById('country').textContent = formData.state;
+        document.getElementById('orderId').textContent = formData.orderId;
+
+
+
+
+    } else {
+        alert('No order data found.');
+    }
+</script>
+</body>
+</html>
