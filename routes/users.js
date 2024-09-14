@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../src/controllers/userController');
+const UserModel = require('../src/models/userModel');
 const authUserVerifier = require('../src/controllers/authUserVerifier');
 const authAdminVerifier = require('../src/controllers/authAdminVerifier');
 
@@ -21,6 +22,17 @@ router.get('/get-admin-session', (req, res) => {
         types: ['user', 'admin']
     };
     res.send('Admin session created');
+});
+
+// Route to get distinct user roles (types)
+router.get('/get-user-roles', authAdminVerifier, async function(req, res) {
+    try {
+        const roles = await UserModel.distinct('types'); // Fetch distinct roles from the 'types' field
+        res.status(200).json(roles);
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        res.status(500).json({ message: 'Error fetching roles' });
+    }
 });
 
 module.exports = router;
