@@ -19,4 +19,8 @@ router.get('/admin-console', authAdminVerifier, function(req, res, next) {
     res.sendFile(path.join(__dirname, '../views/admin-console/admin-console.html'));
 });
 
+router.get('/admin-console/customer-management', authAdminVerifier, function(req, res, next) {
+    res.sendFile(path.join(__dirname, '../views/admin-console/customer-management.html'));
+});
+
 module.exports = router;
