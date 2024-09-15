@@ -49,6 +49,16 @@ const userController = {
         res.status(200).send({status: 'Success', user: user});
     },
 
+    async getAllUsers(req, res) {
+        try {
+            const users = await UserModel.find();
+            res.status(200).json(users);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            res.status(500).json({ message: 'Error fetching users' });
+        }
+    },
+
     async loginUser(req, res) {
         let username = req.body.username;
         let password = req.body.password;
