@@ -52,3 +52,38 @@ th, td {
     word-wrap: break-word;
     text-align: left;
 }
+
+/*Delete User Popup*/
+.popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dimmed background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Pop-up content styling */
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+.popup-content h3 {
+    margin-bottom: 15px;
+}
+
+.popup-content p {
+    margin-bottom: 20px;
+}
+
+.popup-content button {
+    margin: 5px;
+}

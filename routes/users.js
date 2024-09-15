@@ -35,4 +35,21 @@ router.get('/get-user-roles', authAdminVerifier, async function(req, res) {
     }
 });
 
+// Route to authorize the user
+router.post('/authorize', async (req, res) => {
+    const { password } = req.body;
+    try {
+        const user = await UserModel.findOne({ username: req.session.user.username });
+        if (!user) {
+            return res.status(404).json({ status: 'Error', message: 'User not found' });
+        }
+        if (user.password !== password) {
+            return res.status(401).json({ status: 'Error', message: 'Incorrect password' });
+        }
+        res.status(200).json({ status: 'Success', message: 'Authorized' });
+    } catch (error) {
+        res.status(500).json({ status: 'Error', message: 'Server error' });
+    }
+});
+
 module.exports = router;

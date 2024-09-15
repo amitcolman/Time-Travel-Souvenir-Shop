@@ -26,6 +26,16 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error fetching roles:', error);
         });
 
+    fetch('/admin-console/popups.html') // Make sure the path is correct
+        .then(response => response.text())
+        .then(data => {
+            // Insert the pop-up HTML into the body or a specific container
+            const div = document.createElement('div');
+            div.innerHTML = data;
+            document.body.appendChild(div); // You can append it to body or a specific element
+        })
+        .catch(error => console.error('Error loading pop-ups:', error));
+
     function populateRoleFilter(roles) {
         const roleFilter = document.getElementById('role-filter');
         roleFilter.innerHTML = '<option value="">All Roles</option>'; // Default option for "All Roles"
@@ -134,13 +144,74 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Function to handle "Change Password"
+    // Handle Change Password
     function handleChangePassword(event) {
         const username = event.target.getAttribute('data-username');
-        const newPassword = prompt(`Enter new password for ${username}`);
 
-        if (newPassword) {
-            fetch('/update-password', {
+        // Show the authorization pop-up
+        const authPopup = document.getElementById('auth-popup');
+        authPopup.style.display = 'flex'; // Show the auth pop-up
+
+        // Confirm authorization button
+        const confirmAuthBtn = document.getElementById('confirm-auth-btn');
+        const cancelAuthBtn = document.getElementById('cancel-auth-btn');
+        const authPasswordInput = document.getElementById('auth-password-input');
+
+        // Handle authorization
+        confirmAuthBtn.onclick = function() {
+            const authPassword = authPasswordInput.value;
+
+            // Fetch the authorization route
+            fetch('/users/authorize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ password: authPassword })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'Success') {
+                        // Authorization successful, prompt for new password
+                        authPopup.style.display = 'none'; // Hide authorization pop-up
+                        showNewPasswordPopup(username);
+                    } else {
+                        alert('Authorization failed: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during authorization:', error);
+                    alert('Error during authorization');
+                });
+        };
+
+        // Handle cancel authorization button
+        cancelAuthBtn.onclick = function() {
+            authPopup.style.display = 'none'; // Hide the authorization pop-up
+        };
+    }
+
+    // Show new password pop-up
+    function showNewPasswordPopup(username) {
+        const newPasswordPopup = document.getElementById('change-password-popup');
+        newPasswordPopup.style.display = 'flex'; // Show the new password pop-up
+
+        const confirmChangePasswordBtn = document.getElementById('confirm-change-password-btn');
+        const cancelChangePasswordBtn = document.getElementById('cancel-change-password-btn');
+        const newPasswordInput = document.getElementById('new-password-input');
+
+        // Handle password change
+        confirmChangePasswordBtn.onclick = function() {
+            const newPassword = newPasswordInput.value;
+
+            // Simulate password policy check
+            if (!isPasswordValid(newPassword)) {
+                newPasswordPopup.style.display = 'none'; // Hide the new password pop-up
+                showPasswordPolicyError(); // Show password policy error pop-up
+                return;
+            }
+
+            fetch('/users/update-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -150,7 +221,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'Success') {
-                        alert(`Password updated for ${username}`);
+                        newPasswordPopup.style.display = 'none'; // Hide the new password pop-up
+                        showChangeSuccessPopup(); // Show success pop-up
                     } else {
                         alert(`Error: ${data.message}`);
                     }
@@ -158,34 +230,116 @@ document.addEventListener("DOMContentLoaded", function() {
                 .catch(error => {
                     console.error('Error updating password:', error);
                 });
-        }
+        };
+
+        cancelChangePasswordBtn.onclick = function() {
+            newPasswordPopup.style.display = 'none'; // Hide the new password pop-up
+        };
+    }
+
+    // Password policy validation (dummy function)
+    function isPasswordValid(password) {
+        return password.length >= 8 && password.length <= 16; // Example: password must be 8-16 characters long
+    }
+
+    // Show password policy error pop-up
+    function showPasswordPolicyError() {
+        const policyErrorPopup = document.getElementById('password-policy-error-popup');
+        policyErrorPopup.style.display = 'flex'; // Show the password policy error pop-up
+
+        const closePolicyErrorBtn = document.getElementById('close-policy-error-btn');
+        closePolicyErrorBtn.onclick = function() {
+            policyErrorPopup.style.display = 'none'; // Hide the error pop-up
+        };
+    }
+
+    // Show success pop-up
+    function showChangeSuccessPopup() {
+        const successPopup = document.getElementById('password-success-popup');
+        successPopup.style.display = 'flex'; // Show the success pop-up
+
+        const closeSuccessBtn = document.getElementById('close-success-btn');
+        closeSuccessBtn.onclick = function() {
+            successPopup.style.display = 'none'; // Hide the success pop-up
+        };
     }
 
     // Function to handle "Delete User"
     function handleDeleteUser(event) {
-        const username = event.target.getAttribute('data-username');
+        const username = event.target.getAttribute('data-username');  // User to be deleted
 
-        if (confirm(`Are you sure you want to delete the user: ${username}?`)) {
-            fetch('/delete', {
+        // Show the authorization pop-up (reuse for password validation)
+        const authPopup = document.getElementById('auth-popup');
+        authPopup.style.display = 'flex'; // Show the authorization pop-up
+
+        // Confirm authorization button
+        const confirmAuthBtn = document.getElementById('confirm-auth-btn');
+        const cancelAuthBtn = document.getElementById('cancel-auth-btn');
+        const authPasswordInput = document.getElementById('auth-password-input');  // Password input for logged-in user
+
+        // Handle authorization
+        confirmAuthBtn.onclick = function() {
+            const password = authPasswordInput.value;  // Get the logged-in user's password
+
+            // Send a delete request with the logged-in user's password for authorization
+            fetch('/users/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username: username })
+                body: JSON.stringify({ username: username, password: password })  // Send the target username and logged-in user's password
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'Success') {
-                        alert(`${username} has been deleted.`);
-                        filterUsers(); // Re-render the table after deletion
+                        showDeleteSuccessPopup();  // Show success pop-up
+
+                        // Fetch updated user list and re-render the table
+                        fetch('/users/get-all-users')
+                            .then(response => response.json())
+                            .then(users => {
+                                renderTable(users);  // Re-render the table with updated user list
+                            })
+                            .catch(error => console.error('Error fetching users:', error));
                     } else {
-                        alert(`Error: ${data.message}`);
+                        showDeleteErrorPopup(data.message);  // Show error pop-up with the error message
                     }
                 })
                 .catch(error => {
-                    console.error('Error deleting user:', error);
+                    showDeleteErrorPopup('An unexpected error occurred');  // Show a generic error pop-up if something went wrong
                 });
-        }
+
+            authPopup.style.display = 'none';  // Hide the authorization pop-up after confirmation
+        };
+
+        // Handle cancel button
+        cancelAuthBtn.onclick = function() {
+            authPopup.style.display = 'none';  // Hide the authorization pop-up if canceled
+        };
+    }
+
+// Show the user deletion success pop-up
+    function showDeleteSuccessPopup() {
+        const successPopup = document.getElementById('delete-success-popup');
+        successPopup.style.display = 'flex'; // Show success pop-up
+
+        const closeSuccessBtn = document.getElementById('close-delete-success-btn');
+        closeSuccessBtn.onclick = function() {
+            successPopup.style.display = 'none'; // Hide the success pop-up when closed
+        };
+    }
+
+// Show the user deletion error pop-up with a custom error message
+    function showDeleteErrorPopup(errorMessage) {
+        const errorPopup = document.getElementById('delete-error-popup');
+        const errorMsg = document.getElementById('delete-error-message');
+        errorMsg.textContent = errorMessage; // Set the error message
+        errorPopup.style.display = 'flex'; // Show error pop-up
+
+        const closeErrorBtn = document.getElementById('close-delete-error-btn');
+        closeErrorBtn.onclick = function() {
+            errorPopup.style.display = 'none'; // Hide the error pop-up when closed
+        };
     }
 
     // Function to update the arrow icon next to the column name
