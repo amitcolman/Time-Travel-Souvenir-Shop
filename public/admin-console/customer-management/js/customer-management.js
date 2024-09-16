@@ -4,7 +4,6 @@ $(document).ready(function() {
     let usernameSortOrder = 'asc';
     let roleSortOrder = 'asc';
 
-    // Fetch users from the /users/get-all-users route and display in the table
     $.ajax({
         url: '/users/get-all-users',
         type: 'GET',
@@ -19,7 +18,6 @@ $(document).ready(function() {
         }
     });
 
-    // Populate the role filter dropdown
     $.ajax({
         url: '/users/get-user-roles',
         type: 'GET',
@@ -121,26 +119,45 @@ $(document).ready(function() {
     // Function to render the table
     function renderTable(users) {
         const tableBody = $('#userTableBody');
-        tableBody.empty();
+        tableBody.empty();  // Clear the table before rendering
+
+        const loggedInUsername = 'loggedInUser'; // Replace this with the actual logged-in user's username (from session or global var)
 
         users.forEach(user => {
             const role = user.types.includes('admin') ? 'admin' : 'user';
+            let roleAction = '';
+
+            // Check if the user can be promoted or demoted
+            if (role === 'user') {
+                roleAction = `<a href="#" class="promote-user" data-username="${user.username}">[Promote to Admin]</a>`;
+            } else if (role === 'admin' && user.username !== loggedInUsername) {
+                roleAction = `<a href="#" class="demote-user" data-username="${user.username}">[Demote to User]</a>`;
+            }
+
+            // Render the row with square brackets around each link text
             const row = `
-                <tr>
-                    <td>${user.username}</td>
-                    <td>${role}</td>
-                    <td>
-                        <a href="#" class="change-password" data-username="${user.username}">[Change Password]</a>
-                        <a href="#" class="delete-user" data-username="${user.username}">[Delete]</a>
-                    </td>
-                </tr>`;
+            <tr>
+                <td>${user.username}</td>
+                <td>${role}</td>
+                <td>
+                    <a href="#" class="change-password" data-username="${user.username}">[Change Password]</a>
+                    <a href="#" class="delete-user" data-username="${user.username}">[Delete]</a>
+                    ${roleAction}
+                </td>
+            </tr>
+        `;
             tableBody.append(row);
         });
 
-        // Add event listeners to action buttons
+        // Add event listeners for the new promote/demote buttons
+        $('.promote-user').click(handlePromoteUser);
+        $('.demote-user').click(handleDemoteUser);
+
+        // Add event listeners for existing actions
         $('.change-password').click(handleChangePassword);
         $('.delete-user').click(handleDeleteUser);
     }
+
 
     // Handle Change Password
     function handleChangePassword(event) {
@@ -289,8 +306,6 @@ $(document).ready(function() {
         });
     }
 
-    // Helper functions to show success/error pop-ups, password validation, etc. remain unchanged...
-
     // Function to update the arrow icon next to the column name
     function updateArrowIcon(column, order) {
         $('#username-arrow').text('');
@@ -382,5 +397,69 @@ $(document).ready(function() {
             successPopup.closest('.popup-container').css('display', 'none');
         });
     }
+
+    function handlePromoteUser(event) {
+        event.preventDefault();
+        const username = $(this).data('username');
+
+        $.ajax({
+            url: '/users/promote',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ username: username }),
+            success: function() {
+                showRoleChangeSuccessPopup(`User ${username} promoted to admin successfully.`);
+                refreshUsers();
+            },
+            error: function(error) {
+                showRoleChangeErrorPopup('Error promoting user.');
+                console.error('Error promoting user:', error);
+            }
+        });
+    }
+
+    // Handle demoting a user to regular user
+    function handleDemoteUser(event) {
+        event.preventDefault();
+        const username = $(this).data('username');
+
+        $.ajax({
+            url: '/users/demote',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ username: username }),
+            success: function() {
+                showRoleChangeSuccessPopup(`User ${username} demoted to user successfully.`);
+                refreshUsers();
+            },
+            error: function(error) {
+                showRoleChangeErrorPopup('Error demoting user.');
+                console.error('Error demoting user:', error);
+            }
+        });
+    }
+
+    // Show success popup
+    function showRoleChangeSuccessPopup(message) {
+        $('#role-change-success-message').text(message);  // Set the success message
+        $('#role-change-success-popup').css('display', 'flex'); 
+
+        // Close button event listener
+        $('#close-role-change-success-btn').off('click').on('click', function() {
+            $('#role-change-success-popup').css('display', 'none'); 
+        });
+    }
+
+// Show error popup
+    function showRoleChangeErrorPopup(message) {
+        $('#role-change-error-message').text(message);  // Set the error message
+        $('#role-change-error-popup').css('display', 'flex'); 
+
+        // Close button event listener
+        $('#close-role-change-error-btn').off('click').on('click', function() {
+            $('#role-change-error-popup').css('display', 'none'); 
+        });
+    }
+
 });
 

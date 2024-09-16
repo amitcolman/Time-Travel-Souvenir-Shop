@@ -15,6 +15,8 @@ router.post('/update-password', authUserVerifier, userController.updateUserPassw
 router.post('/delete', authAdminVerifier, userController.deleteUser);
 router.get('/get-user-roles', authAdminVerifier, userController.getUserRoles);
 router.post('/authorize', authAdminVerifier, userController.authorize);
+router.post('/promote', authAdminVerifier, userController.promote);
+router.post('/demote', authAdminVerifier, userController.demote);
 
 
 // Route for creating an admin session - for testing purposes ONLY
