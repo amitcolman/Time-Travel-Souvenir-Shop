@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var itemsRouter = require('./routes/items');
 var branchesRouter = require('./routes/branches');
+var cartRouter = require('./routes/cart');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/items', itemsRouter);
 app.use('/branches', branchesRouter);
+app.use('/cart', cartRouter);
 
 
 module.exports = app;

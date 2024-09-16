@@ -10,14 +10,14 @@ const itemController = {
         let quantity = req.body.quantity;
         let picture = req.body.picture;
 
-        // Validate if username is already taken
-        let item_exists = await itemModel.exists({username: itemName});
+        // Validate if item already exists
+        let item_exists = await itemModel.exists({itemName: itemName});
         if (item_exists) {
             res.status(409).send({status: 'Error', message: 'Item already exists'});
             return;
         }
 
-        // Create new user
+        // Adds new item
         let item = new itemModel({
             itemName: itemName,
             country: country,
@@ -35,7 +35,6 @@ const itemController = {
             res.status(500).send({status: 'Error', message: 'Error adding item'});
         });
     },
-
     async getItem(req, res) {
         const item = await itemModel.findOne({itemName: req.query.itemName});
         if (!item) {
