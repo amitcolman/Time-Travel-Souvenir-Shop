@@ -14,6 +14,9 @@ router.get('/logout', authUserVerifier, userController.logoutUser);
 router.get('/get-session', userController.getSession);
 router.post('/update-password', authUserVerifier, userController.updateUserPassword);
 router.post('/delete', authAdminVerifier, userController.deleteUser);
+router.get('/get-user-roles', authAdminVerifier, userController.getUserRoles);
+router.post('/authorize', authAdminVerifier, userController.authorize);
+
 
 // Route for creating an admin session - for testing purposes ONLY
 router.get('/get-admin-session', (req, res) => {
@@ -22,34 +25,6 @@ router.get('/get-admin-session', (req, res) => {
         types: ['user', 'admin']
     };
     res.send('Admin session created');
-});
-
-// Route to get distinct user roles (types)
-router.get('/get-user-roles', authAdminVerifier, async function(req, res) {
-    try {
-        const roles = await UserModel.distinct('types'); // Fetch distinct roles from the 'types' field
-        res.status(200).json(roles);
-    } catch (error) {
-        console.error('Error fetching roles:', error);
-        res.status(500).json({ message: 'Error fetching roles' });
-    }
-});
-
-// Route to authorize the user
-router.post('/authorize', async (req, res) => {
-    const { password } = req.body;
-    try {
-        const user = await UserModel.findOne({ username: req.session.user.username });
-        if (!user) {
-            return res.status(404).json({ status: 'Error', message: 'User not found' });
-        }
-        if (user.password !== password) {
-            return res.status(401).json({ status: 'Error', message: 'Incorrect password' });
-        }
-        res.status(200).json({ status: 'Success', message: 'Authorized' });
-    } catch (error) {
-        res.status(500).json({ status: 'Error', message: 'Server error' });
-    }
 });
 
 module.exports = router;
