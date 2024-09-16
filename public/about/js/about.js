@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setMapLocation(address) {
-        const mapUrl = `https://maps.google.com/maps?q=${address}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
-        mapIframe.src = mapUrl;
+        mapIframe.src = `https://maps.google.com/maps?q=${address}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
     }
 });

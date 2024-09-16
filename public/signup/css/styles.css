@@ -14,15 +14,6 @@ body {
     height: 100vh;
 }
 
-.login-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
-}
-
 h2 {
     margin-bottom: 20px;
     color: #333;
@@ -59,10 +50,6 @@ button {
 
 button:hover {
     background-color: #4cae4c;
-}
-
-.signup-option {
-    margin-top: 15px;
 }
 
 .signup-option p {

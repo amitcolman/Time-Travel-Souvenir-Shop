@@ -259,7 +259,7 @@ $(document).ready(function() {
                         showDeleteErrorPopup(data.message);
                     }
                 },
-                error: function(error) {
+                error: function() {
                     showDeleteErrorPopup('An unexpected error occurred');
                 }
             });

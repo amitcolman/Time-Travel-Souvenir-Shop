@@ -27,8 +27,6 @@ async function login(event) {
 
         // Check if the response is successful
         if (response.ok) {
-            const data = await response.json();
-            // Redirect to home page
             window.location.href = "/";
         } else {
             const errorData = await response.json();

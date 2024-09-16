@@ -39,9 +39,6 @@ document.getElementById('checkout-form').addEventListener('submit', function(eve
         return;
     }
 
-    const product = "meow";
-    const quantity = 5;
-
     localStorage.setItem('checkoutData', JSON.stringify(formData));
     window.location.href = '/orderconfirm';
 });
