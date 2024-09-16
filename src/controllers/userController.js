@@ -3,13 +3,13 @@ const UserModel = require('../models/userModel');
 function validateUsernameAndPassword(username, password, res) {
     // Validate username length
     if (username.length < 3 || username.length > 16) {
-        res.status(400).send({ status: 'Error', message: 'Username must be between 3 and 16 characters' });
+        res.status(400).send({status: 'Error', message: 'Username must be between 3 and 16 characters'});
         return false;
     }
 
     // Validate password length
     if (password.length < 8 || password.length > 16) {
-        res.status(400).send({ status: 'Error', message: 'Password must be between 8 and 16 characters' });
+        res.status(400).send({status: 'Error', message: 'Password must be between 8 and 16 characters'});
         return false;
     }
 
@@ -30,7 +30,7 @@ const userController = {
         }
 
         if (!validateUsernameAndPassword(username, password, res)) {
-            return; 
+            return;
         }
 
         // Create new user
@@ -114,7 +114,7 @@ const userController = {
         }
 
         if (!validateUsernameAndPassword(username, password, res)) {
-            return; 
+            return;
         }
 
         const user = await UserModel.findOneAndUpdate({username: username}, {password: password});
@@ -137,18 +137,52 @@ const userController = {
     },
 
     async authorize(req, res) {
-        const password = req.body;
+        const { password } = req.body;
         try {
-            const user = await UserModel.findOne({username: req.session.user.username});
+            const user = await UserModel.findOne({ username: req.session.user.username });
             if (!user) {
-                return res.status(404).json({status: 'Error', message: 'User not found'});
+                return res.status(404).json({ status: 'Error', message: 'User not found' });
             }
             if (user.password !== password) {
-                return res.status(401).json({status: 'Error', message: 'Incorrect password'});
+                return res.status(401).json({ status: 'Error', message: 'Incorrect password' });
             }
-            res.status(200).json({status: 'Success', message: 'Authorized'});
+            res.status(200).json({ status: 'Success', message: 'Authorized' });
         } catch (error) {
-            res.status(500).json({status: 'Error', message: 'Server error'});
+            res.status(500).json({ status: 'Error', message: 'Server error' });
+        }
+    },
+
+    async promote(req, res) {
+        const {username} = req.body;
+        try {
+            const user = await UserModel.findOneAndUpdate(
+                {username: username},
+                {$addToSet: {types: 'admin'}}
+            );
+            if (!user) {
+                return res.status(404).send({status: 'Error', message: 'User not found'});
+            }
+            res.status(200).send({status: 'Success', message: 'User promoted to admin'});
+        } catch (error) {
+            console.error('Error promoting user:', error);
+            res.status(500).send({status: 'Error', message: 'Error promoting user'});
+        }
+    },
+
+    async demote(req, res) {
+        const {username} = req.body;
+        try {
+            const user = await UserModel.findOneAndUpdate(
+                {username: username},
+                {$pull: {types: 'admin'}}  // Remove 'admin' role, but keep 'user'
+            );
+            if (!user) {
+                return res.status(404).send({status: 'Error', message: 'User not found'});
+            }
+            res.status(200).send({status: 'Success', message: 'User demoted to user'});
+        } catch (error) {
+            console.error('Error demoting user:', error);
+            res.status(500).send({status: 'Error', message: 'Error demoting user'});
         }
     }
 }
