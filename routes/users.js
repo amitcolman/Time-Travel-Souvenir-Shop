@@ -36,7 +36,7 @@ router.get('/get-user-roles', authAdminVerifier, async function(req, res) {
 });
 
 // Route to authorize the user
-router.post('/authorize', async (req, res) => {
+router.post('/authorize', authAdminVerifier, async (req, res) => {
     const { password } = req.body;
     try {
         const user = await UserModel.findOne({ username: req.session.user.username });

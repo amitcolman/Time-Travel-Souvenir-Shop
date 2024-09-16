@@ -35,7 +35,8 @@ router.get('/orderconfirm', function(req, res, next) {
     res.sendFile(path.join(__dirname, '../views/orderconfirm.html'));
 });
 
-
-
+router.get('/admin-console/dashboards', authAdminVerifier, function(req, res, next) {
+    res.sendFile(path.join(__dirname, '../views/admin-console/dashboards.html'));
+});
 
 module.exports = router;
