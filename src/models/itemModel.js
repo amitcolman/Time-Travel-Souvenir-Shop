@@ -32,6 +32,11 @@ const itemSchema = new mongoose.Schema({
     picture: {
         type: String,
         required: true
+    },
+    branch: {
+        type: String,
+        required: true,
+        ref: 'Branches'
     }
 });
 

@@ -9,6 +9,7 @@ const itemController = {
         let price = req.body.price;
         let quantity = req.body.quantity;
         let picture = req.body.picture;
+        let branch = req.body.branch;
 
         // Validate if item already exists
         let item_exists = await itemModel.exists({itemName: itemName});
@@ -26,6 +27,7 @@ const itemController = {
             price: price,
             quantity: quantity,
             picture: picture,
+            branch: branch
         });
 
         await item.save().then(() => {

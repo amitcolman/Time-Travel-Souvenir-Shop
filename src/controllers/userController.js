@@ -184,6 +184,40 @@ const userController = {
             console.error('Error demoting user:', error);
             res.status(500).send({status: 'Error', message: 'Error demoting user'});
         }
+    },
+
+    async promote(req, res) {
+        const {username} = req.body;
+        try {
+            const user = await UserModel.findOneAndUpdate(
+                {username: username},
+                {$addToSet: {types: 'admin'}}  // Add 'admin' role if it doesn't already exist
+            );
+            if (!user) {
+                return res.status(404).send({status: 'Error', message: 'User not found'});
+            }
+            res.status(200).send({status: 'Success', message: 'User promoted to admin'});
+        } catch (error) {
+            console.error('Error promoting user:', error);
+            res.status(500).send({status: 'Error', message: 'Error promoting user'});
+        }
+    },
+
+    async demote(req, res) {
+        const {username} = req.body;
+        try {
+            const user = await UserModel.findOneAndUpdate(
+                {username: username},
+                {$pull: {types: 'admin'}}  // Remove 'admin' role, but keep 'user'
+            );
+            if (!user) {
+                return res.status(404).send({status: 'Error', message: 'User not found'});
+            }
+            res.status(200).send({status: 'Success', message: 'User demoted to user'});
+        } catch (error) {
+            console.error('Error demoting user:', error);
+            res.status(500).send({status: 'Error', message: 'Error demoting user'});
+        }
     }
 }
 
