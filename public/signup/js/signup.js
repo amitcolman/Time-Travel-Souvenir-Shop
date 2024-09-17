@@ -25,7 +25,6 @@ async function signup() {
             if (response.ok) {
                 const data = await response.json();
                 alert("Sign-up successful!");
-                console.log("User created:", data);
             } else {
                 const errorData = await response.json();
                 errorMessage.textContent = `Error: ${errorData.message}`;
