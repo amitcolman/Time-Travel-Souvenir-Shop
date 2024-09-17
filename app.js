@@ -13,6 +13,7 @@ const branchesRouter = require('./routes/branches');
 const cartRouter = require('./routes/cart');
 
 const app = express();
+const cors = require('cors');
 
 // Connect to MongoDB
 const connectDB = require('./config/db');
@@ -25,6 +26,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
 }));
+app.use(cors());
 
 
 app.use(logger('dev'));
