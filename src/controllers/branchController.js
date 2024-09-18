@@ -48,6 +48,16 @@ const branchController = {
             console.error('Error updating branch:', error);
             res.status(500).send({status: 'Error', message: 'Error updating branch'});
         }
+    },
+
+    async getBranch(req, res) {
+        const branch = await branchModel.findOne({name: req.query.name});
+        if (!branch) {
+            res.status(404).send({status: 'Error', message: 'Branch not found'});
+            return;
+        }
+
+        res.status(200).send({status: 'Success', branch: branch});
     }
 }
 

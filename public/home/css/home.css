@@ -1,0 +1,42 @@
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.clock {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(0, 0, 0, 0);
+    box-shadow: inset 0px 0px 0px 4px #333;
+    border-radius: 50%;
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.clock:after,
+.clock:before {
+    position: absolute;
+    content: "";
+    transform-origin: 2px 2px;
+    background-color: #198653;
+    height: 4px;
+    top: 22px;
+    left: 22px;
+}
+
+.clock:before {
+    width: 20px;
+    animation: spin 2000ms linear infinite;
+}
+
+.clock:after {
+    width: 16px;
+    animation: spin 8000ms linear infinite;
+}
+
+.extra-space {
+    margin-bottom: 200px;
+}

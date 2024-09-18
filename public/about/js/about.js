@@ -1,34 +1,42 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const branchSelect = document.getElementById('branchSelect');
-    const mapIframe = document.getElementById('map');
+$(document).ready(function() {
+    const branchSelect = $('#branchSelect');
+    const mapIframe = $('#map');
 
-    fetch('/branches/list')
-        .then(response => response.json())
-        .then(data => {
+    // Fetch the list of branches using AJAX
+    $.ajax({
+        url: '/branches/list', // Your API endpoint for fetching branches
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
             populateBranchDropdown(data.branches);
 
-            const initialLocation = data.branches[0].address; // Assuming the first branch exists
+            // Set the initial map location (assuming the first branch exists)
+            const initialLocation = data.branches[0].address;
             setMapLocation(initialLocation);
 
-            branchSelect.addEventListener('change', function() {
-                const selectedLocation = this.value;
+            // Handle dropdown change event
+            branchSelect.change(function() {
+                const selectedLocation = $(this).val();
                 setMapLocation(selectedLocation);
             });
-        })
-        .catch(error => {
+        },
+        error: function(error) {
             console.error('Error fetching branches:', error);
-        });
+        }
+    });
 
+    // Function to populate the dropdown with branch data
     function populateBranchDropdown(branches) {
+        branchSelect.empty(); // Clear existing options
         branches.forEach(branch => {
-            const option = document.createElement('option');
-            option.value = branch.address;
-            option.textContent = branch.name;
-            branchSelect.appendChild(option);
+            const option = $('<option></option>').val(branch.address).text(branch.name);
+            branchSelect.append(option);
         });
     }
 
+    // Function to update the map location
     function setMapLocation(address) {
-        mapIframe.src = `https://maps.google.com/maps?q=${address}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+        const mapUrl = `https://maps.google.com/maps?q=${address}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+        mapIframe.attr('src', mapUrl);
     }
 });

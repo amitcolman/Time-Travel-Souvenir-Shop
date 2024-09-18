@@ -11,6 +11,10 @@ router.get('/about', function(req, res, next) {
     res.sendFile(path.join(__dirname, '../views/about.html'));
 });
 
+router.get('/profile', function(req, res, next) {
+    res.sendFile(path.join(__dirname, '../views/profile.html'));
+});
+
 router.get('/login', function(req, res, next) {
   res.sendFile(path.join(__dirname, '../views/login.html'));
 });
