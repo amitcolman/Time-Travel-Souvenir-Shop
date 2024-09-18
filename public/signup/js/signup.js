@@ -14,6 +14,7 @@ async function signup() {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
                     username: username,
@@ -25,6 +26,7 @@ async function signup() {
             if (response.ok) {
                 const data = await response.json();
                 alert("Sign-up successful!");
+                window.location.href = "/login";
             } else {
                 const errorData = await response.json();
                 errorMessage.textContent = `Error: ${errorData.message}`;

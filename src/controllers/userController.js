@@ -37,7 +37,8 @@ const userController = {
         let user = new UserModel({
             username: username,
             password: password,
-            types: ['user']
+            types: ['user'],
+            cart: []
         });
 
         await user.save().then(() => {

@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
     cart: [
         {
             type: String,
+            required: true,
             ref: "Items"
         }
     ]
