@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/checkout/css/confirm.css">
-    <script defer src="/checkout/js/confirm.js"></script>
     <title>Order Confirmation</title>
 </head>
 <body>
@@ -16,6 +15,8 @@
         <h3>Order Summary</h3>
         <p><strong>Name:</strong> <span id="name"></span></p>
         <p><strong>Address:</strong> <span id="address"></span> <span id="city"> </span><span id="country"></span></p>
+        <p><strong>Total:</strong><span id="total_price"></span>$</p>
+
 
     </div>
 
@@ -23,6 +24,8 @@
 </div>
 <script>
     const formData = JSON.parse(localStorage.getItem('checkoutData'));
+    const total_price = JSON.parse(localStorage.getItem('total_price'));
+    document.getElementById('total_price').innerText = JSON.stringify(total_price, null, 2);
 
 
     if (formData) {

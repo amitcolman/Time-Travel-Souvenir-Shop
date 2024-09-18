@@ -1,4 +1,19 @@
-document.getElementById('checkout-form').addEventListener('submit', function(event) {
+async function getItemData(item) {
+    const item_data = await fetch(`/items/get?itemName=${encodeURIComponent(item)}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+
+    let data = await item_data.json();
+    return data.item.price
+
+
+}
+
+document.getElementById('checkout-form').addEventListener('submit', async function (event) {
     const formData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
@@ -14,7 +29,6 @@ document.getElementById('checkout-form').addEventListener('submit', function(eve
         orderId: Math.floor(Math.random() * 100000)
 
     };
-
 
 
     const cardNumberPattern = /^[0-9]{16}$/;
@@ -39,8 +53,62 @@ document.getElementById('checkout-form').addEventListener('submit', function(eve
         return;
     }
 
+    event.preventDefault();
+    let items = [];
+    const cart_items = await fetch("/cart/get", {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+
+    })
+    let data = await cart_items.json();
+    let cart_data = {};
+    let item_names = [];
+    let price = 0;
+    if(data.cart) {
+        for (const item of data.cart) {
+            cart_data[item] = await getItemData(item);
+            price += cart_data[item];
+            item_names.push(item);
+            const order = await fetch("/cart/remove", {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    itemName: item
+
+                })
+
+            })
+
+        }
+    }
+    const order = await fetch("/order/add", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            orderId: formData.orderId,
+            items: item_names,
+            total: price
+        })
+
+    })
+
+    localStorage.setItem('cart_data', JSON.stringify(cart_data));
+    localStorage.setItem('total_price', price.toString());
     localStorage.setItem('checkoutData', JSON.stringify(formData));
     window.location.href = '/orderconfirm';
+
+
+
+
 });
 
 
