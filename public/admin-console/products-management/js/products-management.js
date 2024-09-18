@@ -52,15 +52,9 @@ $(document).ready(function () {
             dataType: 'html',
             success: function (data) {
                 const $html = $('<div>').html(data);
-
-                // Include the advanced filter popup along with other relevant popups
                 const relevantPopups = $html.find('#product-management-add-popup, #product-management-edit-popup, ' +
                     '#product-management-delete-popup, #product-management-success-popup, #product-management-error-popup');
-
-                // Append the relevant popups to the body
                 $('body').append(relevantPopups);
-
-                // Bind close button events and save product buttons
                 bindClosePopupButtons();
                 bindSaveProductButtons();
             },
@@ -70,48 +64,69 @@ $(document).ready(function () {
         });
     }
 
-
     function toggleSort(column) {
+        for (const key in sortOrder) {
+            if (key !== column) {
+                sortOrder[key] = 'asc';
+            }
+        }
         sortOrder[column] = sortOrder[column] === 'asc' ? 'desc' : 'asc';
         sortTable(column, sortOrder[column]);
-
         updateArrowIcons(column, sortOrder[column]);
     }
 
-    function updateArrowIcons(column, order) {
-        // Clear all arrows
-        $('#name-arrow, #country-arrow, #period-arrow, #year-arrow, #price-arrow, #quantity-arrow').text('');
 
-        // Update the selected column arrow
+    function updateArrowIcons(column, order) {
+        $('#name-arrow, #country-arrow, #period-arrow, #year-arrow, #price-arrow, #quantity-arrow').text('');
         const arrow = order === 'asc' ? '▲' : '▼';
         $('#' + column + '-arrow').text(arrow);
     }
 
     function sortTable(column, order) {
-        const sortFunc = (a, b) => {
-            let valA = a[column];
-            let valB = b[column];
-
-            // Convert to number for sorting when column is numeric (year, price, quantity)
-            if (['year', 'price', 'quantity'].includes(column)) {
-                valA = Number(valA);
-                valB = Number(valB);
+        filteredProducts.sort((a, b) => {
+            let valueA, valueB;
+            switch (column) {
+                case 'name':
+                    valueA = a.itemName.toLowerCase();
+                    valueB = b.itemName.toLowerCase();
+                    break;
+                case 'country':
+                    valueA = a.country.toLowerCase();
+                    valueB = b.country.toLowerCase();
+                    break;
+                case 'period':
+                    valueA = a.period;
+                    valueB = b.period;
+                    break;
+                case 'year':
+                    valueA = a.year;
+                    valueB = b.year;
+                    break;
+                case 'price':
+                    valueA = a.price;
+                    valueB = b.price;
+                    break;
+                case 'quantity':
+                    valueA = a.quantity;
+                    valueB = b.quantity;
+                    break;
+                default:
+                    return 0;
             }
 
             if (order === 'asc') {
-                return valA > valB ? 1 : -1;
+                return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
             } else {
-                return valA < valB ? 1 : -1;
+                return valueA < valueB ? 1 : valueA > valueB ? -1 : 0;
             }
-        };
+        });
 
-        productsData.sort(sortFunc);
-        renderTable(productsData);
+
+        renderTable(filteredProducts);
     }
 
     function filterProducts() {
         const searchQuery = $('#search-product').val().toLowerCase();
-
         filteredProducts = productsData.filter(product => {
             return product.itemName.toLowerCase().includes(searchQuery);
         });
@@ -137,7 +152,6 @@ $(document).ready(function () {
                 </tr>`;
             tableBody.append(row);
         });
-
         bindEventListeners();
     }
 
@@ -155,10 +169,8 @@ $(document).ready(function () {
     }
 
     function bindSaveProductButtons() {
-
         $('#save-new-product-btn').off('click').on('click', function () {
             const productData = getNewProductFormData();
-
             if (!validateProductFormData(productData)) {
                 return;
             }
@@ -181,7 +193,6 @@ $(document).ready(function () {
         $('#save-edit-product-btn').off('click').on('click', function () {
             const newQuantity = $('#edit-product-quantity').val();
             const itemName = $(this).data('itemName');
-
             if (!newQuantity || isNaN(newQuantity) || newQuantity <= 0) {
                 alert('Please enter a valid quantity.');
                 return;
@@ -244,7 +255,7 @@ $(document).ready(function () {
         const product = productsData.find(p => p._id === productId);
         if (product) {
             togglePopup('#product-management-edit-popup', true);
-            $('#product-modal-title').text('Update Quantity');
+            $('#product-modal-title').text('Edit Quantity');
             $('#edit-product-quantity').val(product.quantity);
             $('#save-edit-product-btn').data('itemName', product.itemName);
         }
@@ -288,7 +299,6 @@ $(document).ready(function () {
 
     function validateProductFormData(productData) {
         const validBranches = ['Israel', 'Antarctica', 'Chile', 'Mongolia', 'Norway'];
-
         if (!productData.itemName) {
             alert('Please enter the product name.');
             return false;
@@ -297,12 +307,10 @@ $(document).ready(function () {
             alert('Please enter the image name.');
             return false;
         }
-
         if (!validBranches.includes(productData.branch)) {
             alert('Please enter a valid branch. Valid branches are: Israel, Antarctica, Chile, Mongolia, Norway.');
             return false;
         }
-
         if (!productData.price || isNaN(productData.price) || productData.price <= 0) {
             alert('Please enter a valid price.');
             return false;
