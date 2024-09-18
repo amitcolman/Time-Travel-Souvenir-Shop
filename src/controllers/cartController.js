@@ -3,7 +3,7 @@ const userModel = require('../models/userModel');
 
 const cartController = {
     async addToCart(req, res) {
-        // Verify that the Item exists.
+        
         let itemName = req.body.itemName
         const item = await itemModel.findOne({itemName: itemName});
         if (!item) {

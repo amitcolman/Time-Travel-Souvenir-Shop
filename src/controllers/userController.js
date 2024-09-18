@@ -1,13 +1,13 @@
 const UserModel = require('../models/userModel');
 
 function validateUsernameAndPassword(username, password, res) {
-    // Validate username length
+    
     if (username.length < 3 || username.length > 16) {
         res.status(400).send({status: 'Error', message: 'Username must be between 3 and 16 characters'});
         return false;
     }
 
-    // Validate password length
+    
     if (password.length < 8 || password.length > 16) {
         res.status(400).send({status: 'Error', message: 'Password must be between 8 and 16 characters'});
         return false;
@@ -22,7 +22,7 @@ const userController = {
         let username = req.body.username;
         let password = req.body.password;
 
-        // Validate if username is already taken
+        
         let user_exists = await UserModel.exists({username: username});
         if (user_exists) {
             res.status(409).send({status: 'Error', message: 'Username already taken'});
@@ -33,7 +33,7 @@ const userController = {
             return;
         }
 
-        // Create new user
+        
         let user = new UserModel({
             username: username,
             password: password,
@@ -175,7 +175,7 @@ const userController = {
         try {
             const user = await UserModel.findOneAndUpdate(
                 {username: username},
-                {$pull: {types: 'admin'}}  // Remove 'admin' role, but keep 'user'
+                {$pull: {types: 'admin'}}  
             );
             if (!user) {
                 return res.status(404).send({status: 'Error', message: 'User not found'});
@@ -192,7 +192,7 @@ const userController = {
         try {
             const user = await UserModel.findOneAndUpdate(
                 {username: username},
-                {$addToSet: {types: 'admin'}}  // Add 'admin' role if it doesn't already exist
+                {$addToSet: {types: 'admin'}}  
             );
             if (!user) {
                 return res.status(404).send({status: 'Error', message: 'User not found'});
@@ -209,7 +209,7 @@ const userController = {
         try {
             const user = await UserModel.findOneAndUpdate(
                 {username: username},
-                {$pull: {types: 'admin'}}  // Remove 'admin' role, but keep 'user'
+                {$pull: {types: 'admin'}}  
             );
             if (!user) {
                 return res.status(404).send({status: 'Error', message: 'User not found'});

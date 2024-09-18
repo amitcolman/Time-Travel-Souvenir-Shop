@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // Fetch and display branches
+    
     $.ajax({
         url: '/branches/list',
         method: 'GET',
@@ -14,7 +14,7 @@ $(document).ready(function () {
         }
     });
 
-    // Fetch and display items
+    
     $.ajax({
         url: '/items/list',
         method: 'GET',
@@ -24,12 +24,12 @@ $(document).ready(function () {
 
             data.item.forEach(function (item) {
                 periods[item.period]++;
-                if (item.quantity < 10) { // Assuming quantity below 10 is low stock
+                if (item.quantity < 10) { 
                     lowStockItems.push(item.itemName);
                 }
             });
 
-            // Render the chart for items by period
+            
             const ctx = document.getElementById('items-chart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
@@ -43,7 +43,7 @@ $(document).ready(function () {
                 }
             });
 
-            // Display low stock items
+            
             lowStockItems.forEach(function (item) {
                 $('#low-stock-list').append(`<li>${item}</li>`);
             });
@@ -53,7 +53,7 @@ $(document).ready(function () {
         }
     });
 
-    // Fetch and display users
+    
     $.ajax({
         url: '/users/get-all-users',
         method: 'GET',
@@ -68,11 +68,11 @@ $(document).ready(function () {
                     roles.user++;
                 }
 
-                // Add the latest users (assuming the array is sorted by creation date)
+                
                 latestUsers.push(user.username);
             });
 
-            // Render the chart for user roles
+            
             const ctx = document.getElementById('users-chart').getContext('2d');
             new Chart(ctx, {
                 type: 'pie',
@@ -85,7 +85,7 @@ $(document).ready(function () {
                 }
             });
 
-            // Display latest users
+            
             latestUsers.slice(0, 5).forEach(function (user) {
                 $('#latest-users-list').append(`<li>${user}</li>`);
             });

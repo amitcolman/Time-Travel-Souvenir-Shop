@@ -1,72 +1,64 @@
-$(document).ready(function() {
+$(document).ready(function () {
     let usersData = [];
     let filteredUsers = [];
     let usernameSortOrder = 'asc';
     let roleSortOrder = 'asc';
-    const loggedInUsername = 'loggedInUser'; // Replace with actual session or global variable for logged-in user
+    const loggedInUsername = 'loggedInUser';
 
-    // Initialize data and load components
     loadUsers();
     loadRoles();
     loadPopups();
 
-    // Event listeners for sorting
     $('#sort-username').click(() => toggleSort('username'));
     $('#sort-role').click(() => toggleSort('role'));
-
-    // Event listeners for filtering
     $('#search-username').on('input', filterUsers);
     $('#role-filter').change(filterUsers);
 
-    // Load users from the server
     function loadUsers() {
         $.ajax({
             url: '/users/get-all-users',
             type: 'GET',
             dataType: 'json',
-            success: function(users) {
+            success: function (users) {
                 usersData = users;
                 filteredUsers = usersData;
                 renderTable(filteredUsers);
             },
-            error: function(error) {
+            error: function (error) {
                 console.error('Error fetching users:', error);
             }
         });
     }
 
-    // Load roles from the server
     function loadRoles() {
         $.ajax({
             url: '/users/get-user-roles',
             type: 'GET',
             dataType: 'json',
-            success: function(roles) {
+            success: function (roles) {
                 populateRoleFilter(roles);
             },
-            error: function(error) {
+            error: function (error) {
                 console.error('Error fetching roles:', error);
             }
         });
     }
 
-    // Load popups
     function loadPopups() {
         $.ajax({
             url: '/admin-console/popups.html',
             type: 'GET',
             dataType: 'html',
-            success: function(data) {
-                $('.popup-container').remove(); // Remove existing popup containers
+            success: function (data) {
+                $('.popup-container').remove();
                 $('body').append(data);
             },
-            error: function(error) {
+            error: function (error) {
                 console.error('Error loading pop-ups:', error);
             }
         });
     }
 
-    // Populate role filter dropdown
     function populateRoleFilter(roles) {
         const roleFilter = $('#role-filter');
         roleFilter.empty().append('<option value="">All Roles</option>');
@@ -80,7 +72,6 @@ $(document).ready(function() {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    // Sort users
     function toggleSort(column) {
         if (column === 'username') {
             usernameSortOrder = usernameSortOrder === 'asc' ? 'desc' : 'asc';
@@ -91,7 +82,6 @@ $(document).ready(function() {
         }
     }
 
-    // Sort table
     function sortTable(column, order) {
         const sortFunc = (a, b) => order === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
 
@@ -110,7 +100,6 @@ $(document).ready(function() {
         return user.types.includes('admin') ? 'admin' : 'user';
     }
 
-    // Update sorting arrow icon
     function updateArrowIcon(column, order) {
         $('#username-arrow, #role-arrow').text('');
         if (column === 'username') {
@@ -120,7 +109,6 @@ $(document).ready(function() {
         }
     }
 
-    // Filter users
     function filterUsers() {
         const searchQuery = $('#search-username').val().toLowerCase();
         const roleFilter = $('#role-filter').val();
@@ -131,7 +119,6 @@ $(document).ready(function() {
         renderTable(filteredUsers);
     }
 
-    // Render users table
     function renderTable(users) {
         const tableBody = $('#userTableBody');
         tableBody.empty();
@@ -157,10 +144,9 @@ $(document).ready(function() {
             tableBody.append(row);
         });
 
-        bindEventListeners();  // Bind event listeners after rendering the table
+        bindEventListeners();
     }
 
-    // Event listeners for actions
     function bindEventListeners() {
         $('.promote-user').click(handlePromoteUser);
         $('.demote-user').click(handleDemoteUser);
@@ -168,7 +154,6 @@ $(document).ready(function() {
         $('.delete-user').click(handleDeleteUser);
     }
 
-    // Handle user promotion
     function handlePromoteUser(event) {
         event.preventDefault();
         const username = $(this).data('username');
@@ -176,19 +161,18 @@ $(document).ready(function() {
             url: '/users/promote',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ username: username }),
-            success: function() {
+            data: JSON.stringify({username: username}),
+            success: function () {
                 showRoleChangeSuccessPopup(`User ${username} promoted to admin successfully.`);
-                refreshUsers();
+                loadUsers();
             },
-            error: function(error) {
+            error: function (error) {
                 showRoleChangeErrorPopup('Error promoting user.');
                 console.error('Error promoting user:', error);
             }
         });
     }
 
-    // Handle user demotion
     function handleDemoteUser(event) {
         event.preventDefault();
         const username = $(this).data('username');
@@ -196,52 +180,50 @@ $(document).ready(function() {
             url: '/users/demote',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ username: username }),
-            success: function() {
+            data: JSON.stringify({username: username}),
+            success: function () {
                 showRoleChangeSuccessPopup(`User ${username} demoted to user successfully.`);
-                refreshUsers();
+                loadUsers();
             },
-            error: function(error) {
+            error: function (error) {
                 showRoleChangeErrorPopup('Error demoting user.');
                 console.error('Error demoting user:', error);
             }
         });
     }
 
-    // Handle delete user action
     function handleDeleteUser(event) {
         event.preventDefault();
         const username = $(this).data('username');
         togglePopup('#delete-confirmation-popup', true);
-        $('#confirm-delete-btn').off('click').on('click', function() {
+        $('#confirm-delete-btn').off('click').on('click', function () {
             $.ajax({
                 url: '/users/delete',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ username: username }),
-                success: function() {
+                data: JSON.stringify({username: username}),
+                success: function () {
                     togglePopup('#delete-confirmation-popup', false);
                     showDeleteSuccessPopup();
-                    refreshUsers();
+                    loadUsers();
                 },
-                error: function(error) {
+                error: function (error) {
                     togglePopup('#delete-confirmation-popup', false);
                     showDeleteErrorPopup('Error deleting user.');
                     console.error('Error deleting user:', error);
                 }
             });
         });
-        $('#cancel-delete-btn').off('click').on('click', function() {
+        $('#cancel-delete-btn').off('click').on('click', function () {
             togglePopup('#delete-confirmation-popup', false);
         });
     }
 
-    // Handle change password action
     function handleChangePassword(event) {
         event.preventDefault();
         const username = $(this).data('username');
         togglePopup('#auth-popup', true);
-        $('#confirm-auth-btn').off('click').on('click', function() {
+        $('#confirm-auth-btn').off('click').on('click', function () {
             const authPassword = $('#auth-password-input').val();
             if (!authPassword) {
                 alert('Please enter a password to authorize.');
@@ -251,8 +233,8 @@ $(document).ready(function() {
                 url: '/users/authorize',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ password: authPassword }),
-                success: function(response) {
+                data: JSON.stringify({password: authPassword}),
+                success: function (response) {
                     if (response.status === 'Success') {
                         togglePopup('#auth-popup', false);
                         showNewPasswordPopup(username);
@@ -260,19 +242,14 @@ $(document).ready(function() {
                         alert('Authorization failed: ' + response.message);
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     console.error('Error during authorization:', error);
                     alert('Error during authorization.');
                 }
             });
         });
-        $('#cancel-auth-btn').off('click').on('click', function() {
+        $('#cancel-auth-btn').off('click').on('click', function () {
             togglePopup('#auth-popup', false);
         });
-    }
-
-    // Refresh users table
-    function refreshUsers() {
-        loadUsers();
     }
 });

@@ -11,14 +11,14 @@ const itemController = {
         let picture = req.body.picture;
         let branch = req.body.branch;
 
-        // Validate if item already exists
+        
         let item_exists = await itemModel.exists({itemName: itemName});
         if (item_exists) {
             res.status(409).send({status: 'Error', message: 'Item already exists'});
             return;
         }
 
-        // Adds new item
+        
         let item = new itemModel({
             itemName: itemName,
             country: country,

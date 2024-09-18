@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             populateBranchDropdown(data.branches);
 
-            const initialLocation = data.branches[0].address; // Assuming the first branch exists
+            const initialLocation = data.branches[0].address; 
             setMapLocation(initialLocation);
 
             branchSelect.addEventListener('change', function() {

@@ -1,4 +1,4 @@
-// Load environment variables
+
 require('dotenv').config();
 
 const express = require('express');
@@ -15,11 +15,11 @@ const cartRouter = require('./routes/cart');
 const app = express();
 const cors = require('cors');
 
-// Connect to MongoDB
+
 const connectDB = require('./config/db');
 connectDB();
 
-// Session Setup
+
 const session = require('express-session');
 app.use(session({
     secret: process.env.SECRET_KEY,
