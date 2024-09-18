@@ -15,20 +15,20 @@
     margin-left: 5px;
 }
 
-/* Dropdown container for role filter */
+/* Dropdown container for period filter */
 .dropdown-container {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-#role-filter {
+#period-filter {
     padding-right: 30px;
     position: relative;
     width: 100%;
 }
 
-/* Arrow for the role filter */
+/* Arrow for the period filter */
 .filter-arrow {
     position: absolute;
     right: 10px;

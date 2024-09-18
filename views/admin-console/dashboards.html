@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dashboards</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/admin-console/dashboards/css/dashboards.css"> <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="/admin-console/dashboards/css/dashboards.css">
 </head>
 <body>
 
@@ -15,10 +15,10 @@
 <div class="container mt-5">
     <h1 class="text-center">Admin Dashboards</h1>
 
-    <!-- Row for the dashboards -->
+
     <div class="row mt-4">
 
-        <!-- Branches Card -->
+
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -29,12 +29,12 @@
             </div>
         </div>
 
-        <!-- Items Card -->
+
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Items in Store</h5>
-                    <canvas id="items-chart" width="200" height="150"></canvas> <!-- Chart.js for items distribution -->
+                    <canvas id="items-chart" width="200" height="150"></canvas>
                     <p id="low-stock-items">Low Stock Items:</p>
                     <ul id="low-stock-list"></ul>
                 </div>
@@ -45,26 +45,26 @@
 
     <div class="row mt-4">
 
-        <!-- Users Card -->
+
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Users</h5>
-                    <canvas id="users-chart" width="200" height="150"></canvas> <!-- Chart.js for user roles -->
+                    <canvas id="users-chart" width="200" height="150"></canvas>
                     <p id="latest-users">Latest Users:</p>
                     <ul id="latest-users-list"></ul>
                 </div>
             </div>
         </div>
 
-        <!-- Orders Card -->
+
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Orders</h5>
                     <p id="total-orders">Total Orders: </p>
                     <p id="total-revenue">Total Revenue: </p>
-                    <canvas id="orders-chart" width="200" height="150"></canvas> <!-- Chart.js for orders over time -->
+                    <canvas id="orders-chart" width="200" height="150"></canvas>
                     <ul id="recent-orders-list">Recent Orders:</ul>
                 </div>
             </div>
@@ -74,7 +74,7 @@
 
     <div class="row mt-4">
 
-        <!-- Suppliers Card -->
+
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -92,10 +92,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js for visual charts -->
-<script src="/admin-console/dashboards/js/dashboards.js"></script> <!-- Link to the external JavaScript file -->
-<script src="/navbar/js/navbar.js"></script> <!-- Navbar script -->
-<script src="/footer/js/footer.js"></script> <!-- Footer script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/admin-console/dashboards/js/dashboards.js"></script>
+<script src="/navbar/js/navbar.js"></script>
+<script src="/footer/js/footer.js"></script>
 
 </body>
 </html>

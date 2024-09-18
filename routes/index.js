@@ -39,4 +39,8 @@ router.get('/admin-console/dashboards', authAdminVerifier, function(req, res, ne
     res.sendFile(path.join(__dirname, '../views/admin-console/dashboards.html'));
 });
 
+router.get('/admin-console/products-management', authAdminVerifier, function(req, res, next) {
+    res.sendFile(path.join(__dirname, '../views/admin-console/products-management.html'));
+});
+
 module.exports = router;

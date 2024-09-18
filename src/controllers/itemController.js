@@ -48,7 +48,7 @@ const itemController = {
 
     async updateItemQuantity(req, res) {
         try {
-            const item = await itemModel.findOneAndUpdate({itemName: req.query.itemName}, {quantity: req.body.quantity}, {new: true});
+            const item = await itemModel.findOneAndUpdate({itemName: req.body.itemName}, {quantity: req.body.quantity}, {new: true});
             if (!item) {
                 res.status(404).send({status: 'Error', message: 'Item not found'});
                 return;
@@ -61,7 +61,7 @@ const itemController = {
     },
     async deleteItem(req, res) {
         try {
-            const item = await itemModel.findOneAndDelete({itemName: req.query.itemName});
+            const item = await itemModel.findOneAndDelete({itemName: req.body.itemName});
             if (!item) {
                 res.status(404).send({status: 'Error', message: 'Item not found'});
                 return;
