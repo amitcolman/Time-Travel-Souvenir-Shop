@@ -1,14 +1,122 @@
 
 let REMOTE_URL = 'http://localhost:3000';
+let filterMinPrice = 0;
+let filterMaxPrice = 0;
 
 
-// Fetch items from the backend
-function fetchItems() {
+function renderCountries(){
     $.ajax({
-        url: `${REMOTE_URL}/items/list`,  // Backend route to fetch all items
+        url: `${REMOTE_URL}/items/countries`,
         method: 'GET',
         success: function(data) {
-            renderItems(data);  // Render the items fetched from the backend
+            data.countries.forEach(country => {
+                $('#country').append(`<option value="${country}">${country}</option>`);
+            });
+        },
+        error: function(error) {
+            console.error('Error fetching countries', error);
+        }
+    });
+}
+
+
+function getYears(yearRange) {
+    let minYear = null
+    let maxYear = null
+    switch (yearRange) {
+        case 'before_0':
+            maxYear = -1;
+            break;
+        case '0_1800':
+            minYear = 0;
+            maxYear = 1800;
+            break;
+        case '1801_2000':
+            minYear = 1801;
+            maxYear = 2000;
+            break;
+        case '2001_2024':
+            minYear = 2001;
+            maxYear = 2024;
+            break;
+        case 'after_2024':
+            minYear = 2025;
+            break;
+    }
+    return [minYear, maxYear];
+}
+
+
+function renderPriceRange(){
+    let minPrice = 1
+    let maxPrice = 10000
+    $.ajax({
+        url: `${REMOTE_URL}/items/price-range`,
+        method: 'GET',
+        success: function(data) {
+            console.log('data is:', data)
+            minPrice = data.minPrice;
+            maxPrice = data.maxPrice;
+        },
+        error: function(error) {
+            console.log('Error fetching items - using default min and max', error);
+        }
+    });
+    $("#priceRange").slider({
+        range: true,
+        min: minPrice,
+        max: maxPrice,
+        values: [minPrice, maxPrice],
+        slide: function(event, ui) {
+            $("#priceLabel").text(`${ui.values[0]}₪ - $${ui.values[1]}₪`);
+
+            filterMinPrice = ui.values[0];
+            filterMaxPrice = ui.values[1];
+        }
+    });
+    $("#priceLabel").text(`${minPrice}₪ - ${maxPrice}₪`);
+    filterMinPrice = minPrice;
+    filterMaxPrice = maxPrice;
+}
+
+
+function applyFilters() {
+    const period = $('#period').val();
+    const minPrice = filterMinPrice;
+    const maxPrice = filterMaxPrice;
+    const country = $('#country').val();
+    const years = getYears($('#year').val())
+    const minYear = years[0];
+    const maxYear = years[1];
+
+    const filters = {};
+
+    // Only add filters that have values
+    if (period && period !== 'all') filters.period = period;
+    if (minYear) filters.minYear = minYear;
+    if (maxYear) filters.minYear = maxYear;
+    if (country && country !== 'all') filters.country = country;
+    if (minPrice) filters.minPrice = parseFloat(minPrice);
+    if (maxPrice) filters.maxPrice = parseFloat(maxPrice);
+
+    console.log('Filters:', filters);
+    fetchItems(filters)
+}
+
+
+function toggleFilter() {
+    $('#filterContainer').collapse('toggle');
+}
+
+// Fetch items from the backend
+function fetchItems(filters = {}) {
+    const queryParams = $.param(filters);
+    const url = `${REMOTE_URL}/items/list${queryParams ? `?${queryParams}` : ''}`;
+    $.ajax({
+        url: url,
+        method: 'GET',
+        success: function(data) {
+            renderItems(data.item);  // Render the items fetched from the backend
         },
         error: function(error) {
             console.error('Error fetching items', error);
@@ -17,34 +125,33 @@ function fetchItems() {
     });
 }
 
+
 // Render the fetched items on the page
 function renderItems(items) {
-    let itemsHtml = items.item.map(item => `
+    $('#items-list').empty()
+    let itemsHtml = items.map(item => `
     <div class="col-md-4 mb-3">
-        <div class="card shop-card">
+        <div class="item-card" data-item-name="${item.itemName}">
             <img src="img/${item.picture}" class="card-img-top" alt="${item.itemName}">
             <div class="card-body">
-                <h5 class="card-title">${item.itemName}</h5>
-                <p class="card-text">Country: ${item.country}</p>
-                <p class="card-text">Period: ${item.period} (${item.year})</p>
-                <p class="card-text">Price: $${item.price}</p>
-                <button class="btn btn-primary view-details-btn" data-item-id="${item._id}">View Details</button>
-                <button class="btn btn-success add-to-cart-btn" data-item-id="${item._id}">Add to Cart</button>
+                <h5 class="item-name">${item.itemName}</h5>
+                 <p class="item-price">${item.price.toFixed(2)}₪</p>
+                <button class="btn btn-success add-to-cart-btn" data-item-name="${item.itemName}">Add to Cart</button>
             </div>
         </div>
     </div>`
     ).join('');
 
-    $('#items-list').html(itemsHtml);
+    $('#items-list').append(itemsHtml);
 }
 
 // Fetch item details from the backend
-function fetchItemDetails(itemId) {
+function fetchItemDetails(itemName) {
     $.ajax({
-        url: `${REMOTE_URL}/items/get?id=${itemId}`,  // Fetch individual item details
+        url: `${REMOTE_URL}/items/get?itemName=${itemName}`,  // Fetch individual item details
         method: 'GET',
         success: function(item) {
-            showItemDetails(item);  // Populate the modal with item details
+            showItemDetails(item.item);  // Populate the modal with item details
         },
         error: function(error) {
             console.error('Error fetching item details', error);
@@ -53,31 +160,37 @@ function fetchItemDetails(itemId) {
     });
 }
 
+function formatYear(year) {
+    return year < 0 ? `${Math.abs(year)} BC` : year;
+}
+
 // Display item details in the modal
 function showItemDetails(item) {
     let itemDetailsHtml = `
-    <img src="${item.picture}" class="img-fluid mb-3" alt="${item.itemName}">
+    <img src="img/${item.picture}" class="img-fluid mb-3" alt="${item.itemName}">
     <h4>${item.itemName}</h4>
     <p>Country: ${item.country}</p>
-    <p>Period: ${item.period} (${item.year})</p>
-    <p>Price: $${item.price}</p>
-    <p>Quantity: ${item.quantity}</p>
+    <p>Period: ${item.period} (${formatYear(item.year)})</p>
+    <p>Price: ${item.price.toFixed(2)}₪</p>
 `;
 
     $('#item-details').html(itemDetailsHtml);
-    $('#add-to-cart-modal').data('item-id', item._id);  // Store item ID in the modal's button
-    $('#itemModal').modal('show');
+    $('#add-to-cart-modal').data('item-name', item.itemName);
+    let modal = new bootstrap.Modal(document.getElementById('itemModal'));
+    modal.show();
+
 }
 
-
 // Handle view details button click
-$(document).on('click', '.view-details-btn', function () {
-    let itemId = $(this).data('item-id');
-    fetchItemDetails(itemId);
+$('#items-list').on('click', '.item-card', function () {
+    let itemName = $(this).data('itemName');
+    fetchItemDetails(itemName);
 });
 
 
 // Initial page load: fetch and display all items and cart
 $(document).ready(function() {
+    renderCountries()
+    renderPriceRange()
     fetchItems();
 });

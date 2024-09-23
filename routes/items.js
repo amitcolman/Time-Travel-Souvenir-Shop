@@ -9,5 +9,8 @@ router.get('/get', itemController.getItem);
 router.post('/update-quantity', authAdminVerifier,  itemController.updateItemQuantity)
 router.delete('/delete', authAdminVerifier, itemController.deleteItem )
 router.get('/list', itemController.listItems)
+router.get('/countries', itemController.listCountries)
+router.get('/price-range', itemController.getPriceRange);
+
 
 module.exports = router;

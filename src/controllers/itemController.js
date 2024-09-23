@@ -37,6 +37,8 @@ const itemController = {
             res.status(500).send({status: 'Error', message: 'Error adding item'});
         });
     },
+
+
     async getItem(req, res) {
         const item = await itemModel.findOne({itemName: req.query.itemName});
         if (!item) {
@@ -45,6 +47,7 @@ const itemController = {
         }
         res.status(200).send({status: 'Success', item: item});
     },
+
 
     async updateItemQuantity(req, res) {
         try {
@@ -59,6 +62,8 @@ const itemController = {
             res.status(500).send({status: 'Error', message: 'Error updating quantity'});
         }
     },
+
+
     async deleteItem(req, res) {
         try {
             const item = await itemModel.findOneAndDelete({itemName: req.body.itemName});
@@ -72,15 +77,86 @@ const itemController = {
             res.status(500).send({status: 'Error', message: 'Error deleting item'});
         }
     },
+
+
     async listItems(req, res) {
-        const items = await itemModel.find({});
-        if (!items) {
-            res.status(404).send({status: 'Error', message: 'No items found'});
-            return;
+        try {
+            const filters = {};
+
+            if (req.query.period) {
+                filters.period = req.query.period;
+            }
+
+            if (req.query.minYear) {
+                filters.year = { ...filters.year, $gte: parseFloat(req.query.minYear) };
+            }
+
+            if (req.query.maxYear) {
+                filters.year = { ...filters.year, $lte: parseFloat(req.query.maxYear) };
+            }
+
+            if (req.query.country) {
+                filters.country = req.query.country;
+            }
+
+            if (req.query.minPrice) {
+                filters.price = { ...filters.price, $gte: parseFloat(req.query.minPrice) };
+            }
+
+            if (req.query.maxPrice) {
+                filters.price = { ...filters.price, $lte: parseFloat(req.query.maxPrice) };
+            }
+
+            const items = await itemModel.find(filters);
+
+            if (!items || items.length === 0) {
+                res.status(404).send({ status: 'Error', message: 'No items found' });
+                return;
+            }
+            res.status(200).send({ status: 'Success', item: items });
+        } catch (error) {
+            console.error('Error fetching items:', error);
+            res.status(500).send({ status: 'Error', message: 'Error fetching items' });
         }
-        res.status(200).send({status: 'Success', item: items});
     },
 
+
+    async listCountries(req, res){
+        try{
+            const countries = await itemModel.distinct('country');
+
+            if (!countries || countries.length === 0) {
+                res.status(404).send({ status: 'Error', message: 'No items found' });
+                return;
+            }
+            res.status(200).send({ status: 'Success', countries: countries });
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+            res.status(500).send({ status: 'Error', message: 'Error fetching countries' });
+        }
+    },
+
+    async getPriceRange(req, res) {
+        try {
+            const result = await itemModel.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        minPrice: { $min: "$price" },
+                        maxPrice: { $max: "$price" }
+                    }
+                }
+            ]);
+            if (!result || result.length === 0) {
+                return res.status(404).send({ status: 'Error', message: 'No items found' });
+            }
+            const { minPrice, maxPrice } = result[0];
+            res.status(200).send({ status: 'Success', minPrice, maxPrice });
+        } catch (error) {
+            console.error('Error fetching price range:', error);
+            res.status(500).send({ status: 'Error', message: 'Error fetching price range' });
+        }
+    },
 }
 
 module.exports = itemController;
