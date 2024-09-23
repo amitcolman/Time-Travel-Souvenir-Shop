@@ -1,12 +1,11 @@
 $(document).ready(function () {
-    // Fetch the logged-in user's orders
     $.ajax({
-        url: '/order/get-user-orders', // Adjust the URL to match your endpoint
+        url: '/order/get-user-orders',
         type: 'GET',
         dataType: 'json',
         success: function (data) {
             const orderHistoryBody = $('#order-history-body');
-            orderHistoryBody.empty(); // Clear any existing rows
+            orderHistoryBody.empty();
 
             // Iterate over the orders and create table rows
             data.forEach(order => {
