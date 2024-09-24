@@ -22,26 +22,6 @@
     align-items: center;
 }
 
-#period-filter {
-    padding-right: 30px;
-    position: relative;
-    width: 100%;
-}
-
-/* Arrow for the period filter */
-.filter-arrow {
-    position: absolute;
-    right: 10px;
-    font-size: 16px;
-    pointer-events: none;
-}
-
-.filter-arrow::before {
-    content: "▼";
-    font-size: 14px;
-    color: #555;
-}
-
 table {
     table-layout: fixed;
     width: 100%;

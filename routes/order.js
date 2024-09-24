@@ -4,7 +4,7 @@ const orderController = require('../src/controllers/orderController');
 const authUserVerifier = require('../src/controllers/authUserVerifier');
 const authAdminVerifier = require("../src/controllers/authAdminVerifier");
 
-// Routes
+
 router.post('/add', authUserVerifier, orderController.createOrder);
 router.delete('/remove', authUserVerifier,  orderController.deleteOrder)
 router.get('/get-user-orders', authUserVerifier, orderController.getLoggedInUserOrders);

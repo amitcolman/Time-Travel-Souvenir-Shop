@@ -13,7 +13,7 @@ async function fetchOnThisDayData(req, res) {
         });
         let data = await response.json();
 
-        // Pick a random event from the events array
+        
         if (data.events && data.events.length > 0) {
             const randomEvent = data.events[Math.floor(Math.random() * data.events.length)];
             res.json({

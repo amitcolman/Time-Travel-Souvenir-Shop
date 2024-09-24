@@ -7,7 +7,7 @@ $(document).ready(function () {
             const orderHistoryBody = $('#order-history-body');
             orderHistoryBody.empty();
 
-            // Iterate over the orders and create table rows
+            
             data.forEach(order => {
                 const orderRow = `
                     <tr>

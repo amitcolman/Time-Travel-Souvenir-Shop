@@ -15,7 +15,6 @@
     margin-left: 5px;
 }
 
-/* Dropdown container for role filter */
 .dropdown-container {
     position: relative;
     display: flex;
@@ -28,7 +27,6 @@
     width: 100%;
 }
 
-/* Arrow for the role filter */
 .filter-arrow {
     position: absolute;
     right: 10px;

@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+    padding-bottom: 100px;
+}
+
 .dashboard-section {
     display: flex;
     flex-wrap: wrap;
@@ -12,7 +17,7 @@
     min-width: 300px;
     max-width: 400px;
     box-sizing: border-box;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     border: 1px solid #ccc;
     padding: 10px;
     background-color: #f9f9f9;
@@ -42,11 +47,9 @@ h3 {
     margin-bottom: 20px;
     margin-left: 15px;
     font-weight: bold;
+    text-align: center;
 }
 
-.bar {
-    fill: steelblue;
-}
 
 .arc path {
     stroke: #fff;
@@ -63,4 +66,28 @@ h3 {
     text-align: left !important;  /* Ensure that the entire legend container is left-aligned */
     display: block !important;    /* Prevent any flex or grid behaviors */
     margin-top: 10px;
+}
+
+/* Legend styles */
+.legend-item {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+}
+
+.legend-color-square {
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+    background-color: #007bff; /* Default color for bar charts */
+}
+
+/* Pie chart text inside slices */
+.pie-text {
+    text-anchor: middle;
+    font-size: 10px;
+    fill: #fff;
+    font-weight: bold;
 }

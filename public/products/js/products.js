@@ -54,7 +54,6 @@ function renderPriceRange(){
         url: `${REMOTE_URL}/items/price-range`,
         method: 'GET',
         success: function(data) {
-            console.log('data is:', data)
             minPrice = data.minPrice;
             maxPrice = data.maxPrice;
         },
@@ -68,7 +67,7 @@ function renderPriceRange(){
         max: maxPrice,
         values: [minPrice, maxPrice],
         slide: function(event, ui) {
-            $("#priceLabel").text(`${ui.values[0]}₪ - $${ui.values[1]}₪`);
+            $("#priceLabel").text(`${ui.values[0]}₪ - ${ui.values[1]}₪`);
 
             filterMinPrice = ui.values[0];
             filterMaxPrice = ui.values[1];
@@ -91,7 +90,7 @@ function applyFilters() {
 
     const filters = {};
 
-    // Only add filters that have values
+    
     if (period && period !== 'all') filters.period = period;
     if (minYear) filters.minYear = minYear;
     if (maxYear) filters.minYear = maxYear;
@@ -108,7 +107,7 @@ function toggleFilter() {
     $('#filterContainer').collapse('toggle');
 }
 
-// Fetch items from the backend
+
 function fetchItems(filters = {}) {
     const queryParams = $.param(filters);
     const url = `${REMOTE_URL}/items/list${queryParams ? `?${queryParams}` : ''}`;
@@ -116,7 +115,7 @@ function fetchItems(filters = {}) {
         url: url,
         method: 'GET',
         success: function(data) {
-            renderItems(data.item);  // Render the items fetched from the backend
+            renderItems(data.item);  
         },
         error: function(error) {
             console.error('Error fetching items', error);
@@ -126,7 +125,7 @@ function fetchItems(filters = {}) {
 }
 
 
-// Render the fetched items on the page
+
 function renderItems(items) {
     $('#items-list').empty()
     let itemsHtml = items.map(item => `
@@ -145,13 +144,13 @@ function renderItems(items) {
     $('#items-list').append(itemsHtml);
 }
 
-// Fetch item details from the backend
+
 function fetchItemDetails(itemName) {
     $.ajax({
-        url: `${REMOTE_URL}/items/get?itemName=${itemName}`,  // Fetch individual item details
+        url: `${REMOTE_URL}/items/get?itemName=${itemName}`,  
         method: 'GET',
         success: function(item) {
-            showItemDetails(item.item);  // Populate the modal with item details
+            showItemDetails(item.item);  
         },
         error: function(error) {
             console.error('Error fetching item details', error);
@@ -164,7 +163,7 @@ function formatYear(year) {
     return year < 0 ? `${Math.abs(year)} BC` : year;
 }
 
-// Display item details in the modal
+
 function showItemDetails(item) {
     let itemDetailsHtml = `
     <img src="img/${item.picture}" class="img-fluid mb-3" alt="${item.itemName}">
@@ -181,14 +180,14 @@ function showItemDetails(item) {
 
 }
 
-// Handle view details button click
+
 $('#items-list').on('click', '.item-card', function () {
     let itemName = $(this).data('itemName');
     fetchItemDetails(itemName);
 });
 
 
-// Initial page load: fetch and display all items and cart
+
 $(document).ready(function() {
     renderCountries()
     renderPriceRange()

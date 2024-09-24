@@ -1,4 +1,6 @@
-// Load environment variables
+
+// noinspection JSIgnoredPromiseFromCall
+
 require('dotenv').config();
 
 const express = require('express');
@@ -18,11 +20,11 @@ const orderRouter = require('./routes/order');
 const app = express();
 const cors = require('cors');
 
-// Connect to MongoDB
+
 const connectDB = require('./config/db');
 connectDB();
 
-// Session Setup
+
 const session = require('express-session');
 app.use(session({
     secret: process.env.SECRET_KEY,
