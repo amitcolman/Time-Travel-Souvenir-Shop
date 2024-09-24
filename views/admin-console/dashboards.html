@@ -12,90 +12,102 @@
 
 <div id="navbar-container"></div>
 
-<div class="container mt-5">
-    <h1 class="text-center">Admin Dashboards</h1>
-
-
-    <div class="row mt-4">
-
-
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Branches</h5>
-                    <p id="total-branches">Total Branches: </p>
-                    <ul id="branch-list"></ul>
-                </div>
+<!-- Users Section -->
+<h3>Users</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="dashboard-panel">
+                <h4>Total Users</h4>
+                <div id="total-users-display"></div>
             </div>
         </div>
-
-
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Items in Store</h5>
-                    <canvas id="items-chart" width="200" height="150"></canvas>
-                    <p id="low-stock-items">Low Stock Items:</p>
-                    <ul id="low-stock-list"></ul>
-                </div>
+        <div class="col-md-4">
+            <div class="dashboard-panel">
+                <h4>User Type Distribution</h4>
+                <svg id="user-type-chart" width="400" height="400"></svg>
+                <div id="user-type-chart-legend"></div>
             </div>
         </div>
-
+        <div class="col-md-4">
+            <div class="dashboard-panel">
+                <h4>Top Users by Orders</h4>
+                <svg id="top-users-chart" width="600" height="400"></svg>
+                <div id="top-users-chart-legend"></div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="row mt-4">
-
-
+<!-- Items Section -->
+<h3>Items</h3>
+<div class="container">
+    <div class="row">
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Users</h5>
-                    <canvas id="users-chart" width="200" height="150"></canvas>
-                    <p id="latest-users">Latest Users:</p>
-                    <ul id="latest-users-list"></ul>
-                </div>
+            <div class="dashboard-panel">
+                <h4>Items By Country</h4>
+                <svg id="items-country-chart" width="600" height="400"></svg>
+                <div id="items-country-chart-legend"></div>
             </div>
         </div>
-
-
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Orders</h5>
-                    <p id="total-orders">Total Orders: </p>
-                    <p id="total-revenue">Total Revenue: </p>
-                    <canvas id="orders-chart" width="200" height="150"></canvas>
-                    <ul id="recent-orders-list">Recent Orders:</ul>
-                </div>
+            <div class="dashboard-panel">
+                <h4>Low Stock Items</h4>
+                <div id="low-stock-items-table"></div> <!-- Assuming this is a table -->
             </div>
         </div>
-
     </div>
-
-    <div class="row mt-4">
-
-
+    <div class="row">
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Suppliers</h5>
-                    <p id="total-suppliers">Total Suppliers: </p>
-                    <ul id="suppliers-list"></ul>
-                </div>
+            <div class="dashboard-panel">
+                <h4>Top Most Expensive Items</h4>
+                <svg id="expensive-items-chart" width="600" height="400"></svg>
+                <div id="expensive-items-chart-legend"></div>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="dashboard-panel">
+                <h4>Top Most Ancient Items</h4>
+                <svg id="ancient-items-chart" width="600" height="400"></svg>
+                <div id="ancient-items-chart-legend"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Branches Section -->
+<h3>Branches</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="dashboard-panel">
+                <h4>Top 5 Most Successful Branches</h4>
+                <svg id="top-branches-chart" width="600" height="400"></svg>
+                <div id="top-branches-chart-legend"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-panel">
+                <h4>Items Per Branch</h4>
+                <svg id="items-branch-chart" width="600" height="400"></svg>
+                <div id="items-branch-chart-legend"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-panel">
+                <h4>Sales by Branch</h4>
+                <svg id="sales-branch-chart" width="600" height="400"></svg>
+                <div id="sales-branch-chart-legend"></div>
+            </div>
+        </div>
     </div>
 </div>
 
 <div id="footer-container"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="/admin-console/dashboards/js/dashboards.js"></script>
 <script src="/navbar/js/navbar.js"></script>
 <script src="/footer/js/footer.js"></script>
-
 </body>
 </html>

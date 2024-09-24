@@ -11,6 +11,7 @@ const usersRouter = require('./routes/users');
 const itemsRouter = require('./routes/items');
 const branchesRouter = require('./routes/branches');
 const cartRouter = require('./routes/cart');
+const dashboardRouter = require('./routes/dashboards');
 
 const app = express();
 const cors = require('cors');
@@ -41,6 +42,7 @@ app.use('/users', usersRouter);
 app.use('/items', itemsRouter);
 app.use('/branches', branchesRouter);
 app.use('/cart', cartRouter);
+app.use('/dashboards', dashboardRouter);
 
 
 module.exports = app;
