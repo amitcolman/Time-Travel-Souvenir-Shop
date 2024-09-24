@@ -25,7 +25,7 @@ async function login(event) {
             })
         });
 
-        // Check if the response is successful
+        
         if (response.ok) {
             window.location.href = "/";
         } else {

@@ -4,7 +4,7 @@ const userController = require('../src/controllers/userController');
 const authUserVerifier = require('../src/controllers/authUserVerifier');
 const authAdminVerifier = require('../src/controllers/authAdminVerifier');
 
-// Routes
+
 router.post('/create', userController.createUser);
 router.get('/get', authAdminVerifier, userController.getUser);
 router.get('/get-all-users', authAdminVerifier ,userController.getAllUsers);
@@ -19,7 +19,7 @@ router.post('/promote', authAdminVerifier, userController.promote);
 router.post('/demote', authAdminVerifier, userController.demote);
 
 
-// Route for creating an admin session - for testing purposes ONLY
+
 router.get('/get-admin-session', (req, res) => {
     req.session.user = {
         username: 'admin',

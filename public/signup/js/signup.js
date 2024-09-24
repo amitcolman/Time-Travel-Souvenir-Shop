@@ -4,7 +4,7 @@ async function signup() {
     const confirmPassword = document.getElementById("confirm-password").value;
     const errorMessage = document.getElementById("error-message");
 
-    // Basic validation to check if passwords match
+    
     if (password === confirmPassword) {
         errorMessage.style.visibility = "hidden";
 
@@ -22,7 +22,7 @@ async function signup() {
                 })
             });
 
-            // Check if the response is successful
+            
             if (response.ok) {
                 const data = await response.json();
                 alert("Sign-up successful!");
@@ -38,7 +38,7 @@ async function signup() {
             errorMessage.style.visibility = "visible";
         }
     } else {
-        // Show error if passwords don't match
+        
         errorMessage.textContent = "Passwords do not match";
         errorMessage.style.visibility = "visible";
     }
