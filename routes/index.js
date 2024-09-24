@@ -47,6 +47,10 @@ router.get('/admin-console/products-management', authAdminVerifier, function(req
     res.sendFile(path.join(__dirname, '../views/admin-console/products-management.html'));
 });
 
+router.get('/admin-console/orders-management', authAdminVerifier, function(req, res, next) {
+    res.sendFile(path.join(__dirname, '../views/admin-console/orders-management.html'));
+});
+
 router.get('/products', function(req, res, next) {
     res.sendFile(path.join(__dirname, '../views/products.html'));
 });
