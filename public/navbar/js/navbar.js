@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         document.querySelectorAll('.auth-profile-logout').forEach(el => {
                             el.style.display = 'block';
                         });
+                        document.querySelectorAll('.cart-icon').forEach(el => {
+                            el.style.display = 'block';
+                        });
 
                         if (sessionData.user.types.includes('admin')) {
                             document.querySelectorAll('.auth-admin').forEach(el => {
@@ -44,7 +47,15 @@ document.addEventListener("DOMContentLoaded", function() {
                         document.querySelectorAll('.auth-profile-logout').forEach(el => {
                             el.style.display = 'none';
                         });
+                        document.querySelectorAll('.cart-icon').forEach(el => {
+                            el.style.display = 'none';
+                        });
                     }
                 })
         });
 });
+
+
+
+
+

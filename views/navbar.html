@@ -8,6 +8,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
 
+                <li class="nav-item cart-icon">
+                    <a class="nav-link" href="/my-cart">Cart</a>
+                </li>
+
                 <li class="nav-item auth-login-signup">
                     <a class="nav-link" href="/login">Login</a>
                 </li>
@@ -31,3 +35,11 @@
         </div>
     </div>
 </nav>
+<div id="cart-tab" class="cart-tab d-none">
+    <div class="cart-content">
+        <h5>Your Cart</h5>
+        <div id="cart-items"></div>
+        <div id="cart-message"></div>
+        <button class="btn btn-primary" id="checkout-button" style="display: none;">Go to Checkout</button>
+    </div>
+</div>

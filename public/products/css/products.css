@@ -36,3 +36,8 @@
     border: 5px solid #198653; /* Border color */
     object-fit: cover; /* Ensures the image covers the area */
 }
+
+.filter-options {
+    position: sticky;
+    top: 0;  /* Keeps the filter fixed when scrolling */
+}

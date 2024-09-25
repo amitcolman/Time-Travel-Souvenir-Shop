@@ -17,54 +17,57 @@
     <h1 class="display-4 text-success">Our amazing souvenirs</h1>
     <p class="lead text-muted">Explore unique souvenirs from different eras - the past, present, and even the future!.</p>
 </div>
-<div class="container mt-5">
-    <div class="card mt-3">
-        <div class="card-header" id="filterHeader">
-            <h5 class="mb-0">
-                <button class="btn btn-link" onclick="toggleFilter()">Filter Items</button>
-            </h5>
+<div class="container-fluid bg-light text-center py-5">
+    <div class="row">
+        <div class="col-md-10" >
+            <div id="items-list" class="row" ></div>
         </div>
-        <div class="collapse" id="filterContainer">
-            <div class="card-body">
-                <h5>Filters</h5>
+        <div class="col-md-2 filter-options" id="filter-options">
+            <div class="card-header" id="filterHeader">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" onclick="toggleFilter()">Filter Items</button>
+                </h5>
+            </div>
+            <div class="collapse" id="filterContainer">
+                <div class="card-body">
+                    <h5>Filters</h5>
 
-                <div class="form-group">
-                    <label for="period">Period:</label>
-                    <select class="form-control" id="period">
-                        <option value="past">Past</option>
-                        <option value="present">Present</option>
-                        <option value="future">Future</option>
-                        <option value="all" selected>all</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="period">Period:</label>
+                        <select class="form-control" id="period">
+                            <option value="past">Past</option>
+                            <option value="present">Present</option>
+                            <option value="future">Future</option>
+                            <option value="all" selected>all</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="year">Year:</label>
-                    <select class="form-control" id="year">
-                        <option value="before_0">BCE</option>
-                        <option value="0_1800">0-1800</option>
-                        <option value="1801_2000">1801-2000</option>
-                        <option value="2001_2024">2000-2024</option>
-                        <option value="after_2024">After 2024</option>
-                        <option value="all" selected>all</option>
-                    </select>
+                    <div class="form-group">
+                        <label for="year">Year:</label>
+                        <select class="form-control" id="year">
+                            <option value="before_0">BCE</option>
+                            <option value="0_1800">0-1800</option>
+                            <option value="1801_2000">1801-2000</option>
+                            <option value="2001_2024">2000-2024</option>
+                            <option value="after_2024">After 2024</option>
+                            <option value="all" selected>all</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <select class="form-control" id="country">
+                            <option value="all" selected>all</option>
+                        </select>
+                    </div>
+                    <div class="price-filter">
+                        <label for="priceRange">Price Range:</label>
+                        <div id="priceRange"></div>
+                        <p>Selected Price: <span id="priceLabel"></span></p>
+                    </div>
+                    <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
                 </div>
-                <div class="form-group">
-                    <label for="country">Country:</label>
-                    <select class="form-control" id="country">
-                        <option value="all" selected>all</option>
-                    </select>
-                </div>
-                <div class="price-filter">
-                    <label for="priceRange">Price Range:</label>
-                    <div id="priceRange"></div>
-                    <p>Selected Price: <span id="priceLabel"></span></p>
-                </div>
-                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
             </div>
         </div>
-    </div>
-    <div id="items-list" class="row">
     </div>
     <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalLabel" aria-hidden="true">
         <div class="modal-dialog">

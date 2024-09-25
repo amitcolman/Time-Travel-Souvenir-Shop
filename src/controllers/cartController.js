@@ -25,7 +25,7 @@ const cartController = {
     },
 
     async removeFromCart(req, res) {
-        let itemName = req.body.itemName
+        let itemName = req.query.itemName
         let username = req.session.user.username;
         let cartItem = {cart: itemName};
         const user = await userModel.findOneAndUpdate({ username: username }, { $pull: cartItem }, {new: true});
@@ -35,6 +35,17 @@ const cartController = {
         }
         res.status(201).send({status: 'Success', message: 'Item removed from cart'});
     },
+
+    async removeAllFromCart(req, res) {
+        let username = req.session.user.username;
+        const user = await userModel.findOneAndUpdate({ username: username },  { $set: { cart: [] } }, {new: true});
+        if (!user) {
+            res.status(404).send({status: 'Error', message: 'User not found'});
+            return;
+        }
+        res.status(201).send({status: 'Success', message: 'Item removed from cart'});
+    },
+
     async getCart(req, res) {
         let username = req.session.user.username;
         const user = await userModel.findOne({ username: username })

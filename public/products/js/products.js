@@ -1,7 +1,8 @@
 
-let REMOTE_URL = 'http://localhost:3000';
+const REMOTE_URL = 'http://localhost:3000';
 let filterMinPrice = 0;
 let filterMaxPrice = 0;
+let products = $('#items-list')
 
 
 function renderCountries(){
@@ -60,22 +61,23 @@ function renderPriceRange(){
         error: function(error) {
             console.log('Error fetching items - using default min and max', error);
         }
-    });
-    $("#priceRange").slider({
-        range: true,
-        min: minPrice,
-        max: maxPrice,
-        values: [minPrice, maxPrice],
-        slide: function(event, ui) {
-            $("#priceLabel").text(`${ui.values[0]}₪ - ${ui.values[1]}₪`);
+    }).always(function() {
+        $("#priceRange").slider({
+            range: true,
+            min: minPrice,
+            max: maxPrice,
+            values: [minPrice, maxPrice],
+            slide: function (event, ui) {
+                $("#priceLabel").text(`${ui.values[0]}₪ - ${ui.values[1]}₪`);
 
-            filterMinPrice = ui.values[0];
-            filterMaxPrice = ui.values[1];
-        }
+                filterMinPrice = ui.values[0];
+                filterMaxPrice = ui.values[1];
+            }
+        });
+        $("#priceLabel").text(`${minPrice}₪ - ${maxPrice}₪`);
+        filterMinPrice = minPrice;
+        filterMaxPrice = maxPrice;
     });
-    $("#priceLabel").text(`${minPrice}₪ - ${maxPrice}₪`);
-    filterMinPrice = minPrice;
-    filterMaxPrice = maxPrice;
 }
 
 
@@ -119,29 +121,26 @@ function fetchItems(filters = {}) {
         },
         error: function(error) {
             console.error('Error fetching items', error);
-            $('#items-list').html('<p>Error loading items. Please try again later.</p>');
+            products.html('<p>Error loading items. Please try again later.</p>');
         }
     });
 }
 
 
-
 function renderItems(items) {
-    $('#items-list').empty()
+    products.empty()
     let itemsHtml = items.map(item => `
-    <div class="col-md-4 mb-3">
-        <div class="item-card" data-item-name="${item.itemName}">
+        <div class="item-card col-md-4" data-item-name="${item.itemName}">
             <img src="img/${item.picture}" class="card-img-top" alt="${item.itemName}">
             <div class="card-body">
                 <h5 class="item-name">${item.itemName}</h5>
                  <p class="item-price">${item.price.toFixed(2)}₪</p>
-                <button class="btn btn-success add-to-cart-btn" data-item-name="${item.itemName}">Add to Cart</button>
+                <button class="btn btn-main add-to-cart-btn" onclick="addToCart('${item.itemName}', this)">Add to Cart</button>
             </div>
-        </div>
-    </div>`
+        </div>`
     ).join('');
 
-    $('#items-list').append(itemsHtml);
+    products.append(itemsHtml);
 }
 
 
@@ -158,6 +157,7 @@ function fetchItemDetails(itemName) {
         }
     });
 }
+
 
 function formatYear(year) {
     return year < 0 ? `${Math.abs(year)} BC` : year;
@@ -181,11 +181,44 @@ function showItemDetails(item) {
 }
 
 
-$('#items-list').on('click', '.item-card', function () {
+function addToCart(itemName, buttonElement){
+    $.ajax({
+        url: `${REMOTE_URL}/cart/add`,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({"itemName":itemName}),
+        success: function(data) {
+            $(buttonElement).text('Item added to cart')
+            $(buttonElement).removeClass('btn-main').addClass('btn-added')
+            $(buttonElement).prop('disabled', true);
+        },
+        error: function(error) {
+            if (error.statusCode === 401) {
+                $(buttonElement).text('Log in to add to cart');
+                $(buttonElement).removeClass('btn-success').addClass('btn-error');
+            } else {
+                $(buttonElement).text('Failed to add to cart. Please can try again later.');
+                $(buttonElement).removeClass('btn-main').addClass('btn-error');
+            }
+
+            setTimeout(function() {
+                $(buttonElement).text('Add to Cart');
+                $(buttonElement).removeClass('btn-error').addClass('btn-main');
+                $(buttonElement).prop('disabled', false);
+            }, 5000);
+        }
+    });
+}
+
+products.on('click', '.item-card', function () {
     let itemName = $(this).data('itemName');
     fetchItemDetails(itemName);
 });
 
+products.on('click', '.item-card', function () {
+    let itemName = $(this).data('itemName');
+    fetchItemDetails(itemName);
+});
 
 
 $(document).ready(function() {
