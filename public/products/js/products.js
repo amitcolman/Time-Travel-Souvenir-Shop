@@ -135,7 +135,7 @@ function renderItems(items) {
             <div class="card-body">
                 <h5 class="item-name">${item.itemName}</h5>
                  <p class="item-price">${item.price.toFixed(2)}₪</p>
-                <button class="btn btn-main add-to-cart-btn" onclick="addToCart('${item.itemName}', this)">Add to Cart</button>
+                <button class="btn btn-main add-to-cart-btn" >Add to Cart</button>
             </div>
         </div>`
     ).join('');
