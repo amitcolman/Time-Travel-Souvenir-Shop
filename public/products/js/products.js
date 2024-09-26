@@ -135,7 +135,7 @@ function renderItems(items) {
             <div class="card-body">
                 <h5 class="item-name">${item.itemName}</h5>
                  <p class="item-price">${item.price.toFixed(2)}₪</p>
-                <button class="btn btn-main add-to-cart-btn" >Add to Cart</button>
+                <button class="btn btn-main add-to-cart-btn" data-item-name="${item.itemName}" >Add to Cart</button>
             </div>
         </div>`
     ).join('');
@@ -215,9 +215,9 @@ products.on('click', '.item-card', function () {
     fetchItemDetails(itemName);
 });
 
-products.on('click', '.item-card', function () {
-    let itemName = $(this).data('itemName');
-    fetchItemDetails(itemName);
+products.on('click', '.add-to-cart-btn', function () {
+    const itemName = $(this).data('itemName');
+    addToCart(itemName, this);
 });
 
 
