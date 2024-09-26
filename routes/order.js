@@ -6,7 +6,8 @@ const authAdminVerifier = require("../src/controllers/authAdminVerifier");
 
 
 router.post('/add', authUserVerifier, orderController.createOrder);
-router.delete('/remove', authUserVerifier,  orderController.deleteOrder)
+router.delete('/remove', authUserVerifier,  orderController.deleteOrder);
+router.post('/update', authUserVerifier, orderController.updateOrder);
 router.get('/get-user-orders', authUserVerifier, orderController.getLoggedInUserOrders);
 router.get('/get-all-orders', authAdminVerifier, orderController.getAllOrders);
 
