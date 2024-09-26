@@ -23,8 +23,6 @@ const orderController = {
     },
 
     async deleteOrder(req, res) {
-        console.log('Request body:', req.body);
-
         const id = await orderModel.findOneAndDelete({ orderId: req.body.orderId });
 
         if (!id) {

@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const item = require('./itemModel');
-const string_decoder = require("string_decoder");
 
 const ordersSchema = new mongoose.Schema({
     username: {

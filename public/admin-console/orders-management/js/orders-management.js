@@ -8,20 +8,15 @@ $(document).ready(function () {
         total: 'asc'
     };
 
-    // Load orders and popups
     loadOrders();
     loadPopups();
 
-    // Sort orders by column
     $('#sort-orderId').click(() => toggleSort('orderId'));
     $('#sort-username').click(() => toggleSort('username'));
     $('#sort-items').click(() => toggleSort('items'));
     $('#sort-total').click(() => toggleSort('total'));
-
-    // Filter orders by search
     $('#search-order').on('input', filterOrders);
 
-    // Function to load orders from server
     function loadOrders() {
         $.ajax({
             url: '/order/get-all-orders',
@@ -38,7 +33,6 @@ $(document).ready(function () {
         });
     }
 
-    // Function to load popups
     function loadPopups() {
         $.ajax({
             url: '/admin-console/popups.html',
@@ -57,14 +51,12 @@ $(document).ready(function () {
         });
     }
 
-    // Sort toggle for columns
     function toggleSort(column) {
         sortOrder[column] = sortOrder[column] === 'asc' ? 'desc' : 'asc';
         sortTable(column, sortOrder[column]);
         updateArrowIcons(column, sortOrder[column]);
     }
 
-    // Function to sort table
     function sortTable(column, order) {
         filteredOrders.sort((a, b) => {
             let aValue = a[column];
@@ -86,14 +78,12 @@ $(document).ready(function () {
         renderTable(filteredOrders);
     }
 
-    // Update arrow icons for sorting
     function updateArrowIcons(column, order) {
         $('#orderId-arrow, #username-arrow, #items-arrow, #total-arrow').text('');
         const arrow = order === 'asc' ? '▲' : '▼';
         $('#' + column + '-arrow').text(arrow);
     }
 
-    // Function to filter orders by search input
     function filterOrders() {
         const searchQuery = $('#search-order').val().toLowerCase();
         filteredOrders = ordersData.filter(order => {
@@ -105,7 +95,6 @@ $(document).ready(function () {
         renderTable(filteredOrders);
     }
 
-    // Render table with orders
     function renderTable(orders) {
         const tableBody = $('#orderTableBody');
         tableBody.empty();
@@ -126,11 +115,10 @@ $(document).ready(function () {
             tableBody.append(row);
         });
 
-        // Bind event listeners after table is rendered
+
         bindEventListeners();
     }
 
-    // Bind event listeners for table actions
     function bindEventListeners() {
         $('.edit-order').click(handleEditOrder);
         $('.delete-order').click(handleDeleteOrder);
@@ -145,8 +133,8 @@ $(document).ready(function () {
             togglePopup('#order-management-edit-popup', true);
             fillOrderForm(order);
 
-            // Make the click event handler function async
-            $('#save-edit-order-btn').off('click').on('click', async function() {
+
+            $('#save-edit-order-btn').off('click').on('click', async function () {
                 const orderData = getOrderFormData();
                 const isValid = await validateOrderFormData(orderData);
                 if (isValid) {
@@ -154,61 +142,58 @@ $(document).ready(function () {
                         url: '/order/update',
                         type: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({ orderId: order.orderId, ...orderData }),
-                        success: function() {
-                            togglePopup('#order-management-edit-popup', false); // Close the popup
-                            loadOrders(); // Reload orders table
+                        data: JSON.stringify({orderId: order.orderId, ...orderData}),
+                        success: function () {
+                            togglePopup('#order-management-edit-popup', false);
+                            loadOrders();
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.error('Error updating order:', error);
                         }
                     });
                 }
             });
 
-            $('#cancel-order-edit-btn').off('click').on('click', function() {
+            $('#cancel-order-edit-btn').off('click').on('click', function () {
                 togglePopup('#order-management-edit-popup', false);
             });
         }
     }
 
-
-    // Handle deleting an order
     function handleDeleteOrder(event) {
         event.preventDefault();
 
-        const orderId = $(this).data('id'); // Get the order ID from the button's data attribute
+        const orderId = $(this).data('id');
+        const order = ordersData.find(o => o._id === orderId);
 
-        togglePopup('#order-management-delete-popup', true); // Show delete confirmation popup
+        togglePopup('#order-management-delete-popup', true);
 
-        // Confirm delete action
-        $('#confirm-delete-order-btn').off('click').on('click', function() {
+
+        $('#confirm-delete-order-btn').off('click').on('click', function () {
             $.ajax({
                 url: '/order/remove',
                 type: 'DELETE',
                 contentType: 'application/json',
-                data: JSON.stringify({ orderId: orderId }), // Pass the order ID to the API
-                success: function() {
-                    togglePopup('#order-management-delete-popup', false); // Close the delete confirmation popup
-                    togglePopup('#order-management-success-popup', true); // Show success popup
-                    loadOrders(); // Reload the orders table
+                data: JSON.stringify({orderId: order.orderId}),
+                success: function () {
+                    togglePopup('#order-management-delete-popup', false);
+                    togglePopup('#order-management-success-popup', true);
+                    loadOrders();
                 },
-                error: function(error) {
-                    togglePopup('#order-management-delete-popup', false); // Close the delete confirmation popup
-                    togglePopup('#order-management-error-popup', true); // Show error popup
+                error: function (error) {
+                    togglePopup('#order-management-delete-popup', false);
+                    togglePopup('#order-management-error-popup', true);
                     console.error('Error deleting order:', error);
                 }
             });
         });
 
-        // Cancel delete action
-        $('#cancel-delete-order-btn').off('click').on('click', function() {
-            togglePopup('#order-management-delete-popup', false); // Hide delete confirmation popup
+
+        $('#cancel-delete-order-btn').off('click').on('click', function () {
+            togglePopup('#order-management-delete-popup', false);
         });
     }
 
-
-    // Utility function to toggle popups
     function togglePopup(popupId, show = true) {
         const popup = $(popupId);
         popup.css('display', show ? 'flex' : 'none');
@@ -217,48 +202,46 @@ $(document).ready(function () {
         }
     }
 
-    // Utility function to fill the order form
     function fillOrderForm(order) {
         $('#edit-order-items').val(order.items.join(', '));
         $('#edit-order-total').val(order.total);
     }
 
     async function validateOrderFormData(orderData) {
-        // Check if the items and total are valid
+
         if (!orderData.items || isNaN(orderData.total)) {
             alert('Please fill in all fields correctly.');
             return false;
         }
-        // Split the items into a list (assuming they are comma-separated)
+
         const itemsList = orderData.items.split(',').map(item => item.trim());
 
-        // Loop through each item in the order to check its existence and stock via backend
+
         for (let itemName of itemsList) {
-            const isValid = await validateItemExists(itemName);  // Await backend validation
+            const isValid = await validateItemExists(itemName);
             if (!isValid) {
-                return false;  // Stop validation if any item is invalid
+                return false;
             }
         }
 
-        if (orderData.total <= 0)
-        {
+        if (orderData.total <= 0) {
             alert('Value must be a positive number');
             return false;
         }
 
-        return true;  // All items are valid
+        return true;
     }
 
     async function validateItemExists(itemName) {
         try {
             const response = await $.ajax({
-                url: '/items/get',  // Backend route to check the item
+                url: '/items/get',
                 type: 'GET',
-                data: { itemName: itemName },  // Send item name as query parameter
+                data: {itemName: itemName},
                 dataType: 'json'
             });
 
-            // If the item exists and is in stock
+
             if (response.item.quantity > 0) {
                 return true;
             } else {
@@ -266,7 +249,7 @@ $(document).ready(function () {
                 return false;
             }
         } catch (error) {
-            // Handle case when item is not found or server error
+
             if (error.status === 404) {
                 alert(`Item '${itemName}' does not exist in the store.`);
             } else {
@@ -276,8 +259,6 @@ $(document).ready(function () {
         }
     }
 
-
-    // Close buttons for popups
     function bindClosePopupButtons() {
         $('.popup-container .btn').off('click').on('click', function () {
             const popup = $(this).closest('.popup-container');
