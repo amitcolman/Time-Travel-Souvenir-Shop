@@ -3,7 +3,7 @@ const Item = require('../models/itemModel');
 const Order = require('../models/ordersModel');
 
 const dashboardController = {
-    
+
     async getTotalUsers(req, res) {
         try {
             const totalUsers = await User.countDocuments({});
@@ -14,7 +14,7 @@ const dashboardController = {
         }
     },
 
-    
+
     async getUserTypeDistribution(req, res) {
         try {
             const userTypeDistribution = await User.aggregate([
@@ -31,7 +31,7 @@ const dashboardController = {
         }
     },
 
-    
+
     async getTopUsers(req, res) {
         try {
             const topUsers = await Order.aggregate([
@@ -49,7 +49,7 @@ const dashboardController = {
         }
     },
 
-    
+
     async getItemsByCountry(req, res) {
         try {
             const itemsByCountry = await Item.aggregate([
@@ -65,7 +65,7 @@ const dashboardController = {
         }
     },
 
-    
+
     async getLowStockItems(req, res) {
         try {
             const lowStockItems = await Item.find({quantity: {$lt: 10}})
@@ -77,7 +77,7 @@ const dashboardController = {
         }
     },
 
-    
+
     async getTopExpensiveItems(req, res) {
         try {
             const topExpensiveItems = await Item.find({})
@@ -91,11 +91,11 @@ const dashboardController = {
         }
     },
 
-    
+
     async getTopAncientItems(req, res) {
         try {
             const topAncientItems = await Item.find({})
-                .sort({year: 1})  
+                .sort({year: 1})
                 .limit(5)
                 .select('itemName year');
             res.status(200).json(topAncientItems);
@@ -109,42 +109,50 @@ const dashboardController = {
         try {
             const topBranches = await Order.aggregate([
                 {
-                    
-                    $unwind: "$items"
+                    $unwind: "$items"  
                 },
                 {
                     
+                    $set: {
+                        items: {
+                            $map: {
+                                input: { $split: ["$items", ","] },  
+                                as: "item",
+                                in: { $trim: { input: "$$item" } }  
+                            }
+                        }
+                    }
+                },
+                {
+                    $unwind: "$items"  
+                },
+                {
                     $lookup: {
                         from: 'items',  
                         localField: 'items',  
                         foreignField: 'itemName',  
-                        as: 'itemDetails'  
+                        as: 'itemDetails'
                     }
                 },
                 {
-                    
-                    $unwind: "$itemDetails"
+                    $unwind: "$itemDetails"  
                 },
                 {
-                    
                     $group: {
                         _id: "$itemDetails.branch",  
-                        totalOrders: {$sum: 1}  
+                        totalOrders: { $sum: 1 }  
                     }
                 },
                 {
-                    
-                    $sort: {totalOrders: -1}
+                    $sort: { totalOrders: -1 }  
                 },
                 {
-                    
-                    $limit: 5
+                    $limit: 5  
                 }
             ]);
 
-            
             res.status(200).json(topBranches.map(branch => ({
-                branch: branch._id,  
+                branch: branch._id,
                 totalOrders: branch.totalOrders
             })));
         } catch (error) {
@@ -154,7 +162,7 @@ const dashboardController = {
     }
     ,
 
-    
+
     async getItemsPerBranch(req, res) {
         try {
             const itemsPerBranch = await Item.aggregate([
@@ -170,44 +178,56 @@ const dashboardController = {
         }
     },
 
-    
+
     async getSalesByBranch(req, res) {
         try {
             const salesByBranch = await Order.aggregate([
                 {
-                    
+
                     $unwind: "$items"
                 },
                 {
-                    
-                    $lookup: {
-                        from: 'items',  
-                        localField: 'items',  
-                        foreignField: 'itemName',  
-                        as: 'itemDetails'  
+
+                    $set: {
+                        items: {
+                            $map: {
+                                input: { $split: ["$items", ","] },
+                                as: "item",
+                                in: { $trim: { input: "$$item" } }
+                            }
+                        }
                     }
                 },
                 {
-                    
+
+                    $lookup: {
+                        from: 'items',
+                        localField: 'items',
+                        foreignField: 'itemName',
+                        as: 'itemDetails'
+                    }
+                },
+                {
+
                     $unwind: "$itemDetails"
                 },
                 {
-                    
+
                     $group: {
-                        _id: "$itemDetails.branch",  
-                        totalSales: {$sum: "$total"}  
+                        _id: "$itemDetails.branch",
+                        totalSales: {$sum: "$total"}
                     }
                 },
                 {
-                    
+
                     $sort: {totalSales: -1}
                 }
             ]);
 
-            
+
             res.status(200).json(salesByBranch.map(branch => ({
-                branch: branch._id,  
-                totalSales: branch.totalSales  
+                branch: branch._id,
+                totalSales: branch.totalSales
             })));
         } catch (error) {
             console.error('Error fetching sales by branch:', error);

@@ -24,7 +24,7 @@ async function fetchOnThisDayData(req, res) {
             });
         } else {
             res.status(404).json({ message: 'No events found for this date.' });
-            console.log('No events found for url ', url);
+            console.error('No events found for url ', url);
         }
     } catch (error) {
         console.error('Error fetching On This Day data:', error);

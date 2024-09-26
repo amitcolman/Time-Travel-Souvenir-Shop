@@ -62,7 +62,7 @@ h3 {
 #ancient-items-chart-legend,
 #items-branch-chart-legend,
 #sales-branch-chart-legend,
-#top-branches-chart-legend {
+#top-branches-table-legend {
     text-align: left !important;  /* Ensure that the entire legend container is left-aligned */
     display: block !important;    /* Prevent any flex or grid behaviors */
     margin-top: 10px;
@@ -90,4 +90,9 @@ h3 {
     font-size: 10px;
     fill: #fff;
     font-weight: bold;
+}
+
+#top-branches-table {
+    width: 100%;
+    text-align: left;
 }
