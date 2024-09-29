@@ -12,6 +12,7 @@ $(document).ready(function () {
 
     loadProducts();
     loadPopups();
+    loadFilterOptions();
 
     $('#sort-name').click(() => toggleSort('name'));
     $('#sort-country').click(() => toggleSort('country'));
@@ -24,6 +25,11 @@ $(document).ready(function () {
         filterProducts();
     });
     $('#period-filter').change(filterProducts);
+    $('#advanced-filter-btn').click(function () {
+        $('#advancedFilterContainer').collapse('toggle');
+    });
+
+    $('#apply-filters-btn').on('click', applyFilters);
 
     function loadProducts() {
         $.ajax({
@@ -64,12 +70,82 @@ $(document).ready(function () {
         });
     }
 
+    function loadFilterOptions() {
+        
+        $.ajax({
+            url: '/items/range-values',  
+            type: 'GET',
+            success: function(response) {
+                if (response.status === 'Success') {
+                    const { minYear, maxYear, minPrice, maxPrice, minQuantity, maxQuantity } = response;
+
+                    
+                    $('#yearRangeSlider').slider({
+                        range: true,
+                        min: minYear,
+                        max: maxYear,
+                        values: [minYear, maxYear],
+                        slide: function(event, ui) {
+                            $('#yearRangeLabel').text(`${ui.values[0]} : ${ui.values[1]}`);
+                        }
+                    });
+                    $('#yearRangeLabel').text(`${minYear} : ${maxYear}`);
+
+                    
+                    $('#priceRangeSlider').slider({
+                        range: true,
+                        min: minPrice,
+                        max: maxPrice,
+                        values: [minPrice, maxPrice],
+                        slide: function(event, ui) {
+                            $('#priceRangeLabel').text(`$${ui.values[0]} : $${ui.values[1]}`);
+                        }
+                    });
+                    $('#priceRangeLabel').text(`$${minPrice} : $${maxPrice}`);
+
+                    
+                    $('#quantityRangeSlider').slider({
+                        range: true,
+                        min: minQuantity,
+                        max: maxQuantity,
+                        values: [minQuantity, maxQuantity],
+                        slide: function(event, ui) {
+                            $('#quantityRangeLabel').text(`${ui.values[0]} : ${ui.values[1]}`);
+                        }
+                    });
+                    $('#quantityRangeLabel').text(`${minQuantity} : ${maxQuantity}`);
+                } else {
+                    console.error('Error loading range values:', response.message);
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching range values:', error);
+            }
+        });
+    }
+
+    function applyFilters() {
+        filteredProducts = productsData.filter(product => {
+            const matchesCountry = !$('#filter-country').val() || product.country.toLowerCase().includes($('#filter-country').val().toLowerCase());
+            const matchesPeriod = $('#filter-period').val() === 'all' || product.period === $('#filter-period').val();
+            const matchesYear = product.year >= $('#yearRangeSlider').slider('values', 0) && product.year <= $('#yearRangeSlider').slider('values', 1);
+            const matchesPrice = product.price >= $('#priceRangeSlider').slider('values', 0) && product.price <= $('#priceRangeSlider').slider('values', 1);
+            const matchesQuantity = product.quantity >= $('#quantityRangeSlider').slider('values', 0) && product.quantity <= $('#quantityRangeSlider').slider('values', 1);
+
+            return matchesCountry && matchesPeriod && matchesYear && matchesPrice && matchesQuantity;
+        });
+
+        renderTable(filteredProducts);
+    }
+
     function toggleSort(column) {
+        
         for (const key in sortOrder) {
             if (key !== column) {
-                sortOrder[key] = 'asc';
+                sortOrder[key] = 'asc'; 
             }
         }
+
         sortOrder[column] = sortOrder[column] === 'asc' ? 'desc' : 'asc';
         sortTable(column, sortOrder[column]);
         updateArrowIcons(column, sortOrder[column]);

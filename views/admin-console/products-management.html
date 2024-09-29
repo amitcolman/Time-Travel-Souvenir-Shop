@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/admin-console/css/management.css">
     <link rel="stylesheet" href="/admin-console/main/css/popups.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
@@ -19,12 +20,56 @@
     <div class="row mb-3">
 
         <div class="col-md-8 d-flex">
-            <input type="text" id="search-product" class="form-control me-2" placeholder="Search by product name" style="width: 40%;">
+            <input type="text" id="search-product" class="form-control me-2" placeholder="Search by product name"
+                   style="width: 40%;">
+            <button class="btn btn-secondary option-button" id="advanced-filter-btn" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#advancedFilterContainer" aria-expanded="false"
+                    aria-controls="advancedFilterContainer">
+                Advanced Filters
+            </button>
         </div>
 
-
         <div class="col-md-4 d-flex justify-content-end">
-            <button id="add-product-btn" class="btn btn-primary" style="background-color: #5cb85c; border: #5cb85c">Add New Product</button>
+            <button id="add-product-btn" class="btn btn-primary position-absolute option-button">Add New Product
+            </button>
+        </div>
+        <div class="collapse mt-3" id="advancedFilterContainer">
+            <div class="card card-body">
+                <div class="form-group mb-3">
+                    <label for="filter-country">Country</label>
+                    <input type="text" id="filter-country" class="form-control" placeholder="Search by country">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="filter-period">Period</label>
+                    <select class="form-control" id="filter-period">
+                        <option value="all">All Periods</option>
+                        <option value="past">Past</option>
+                        <option value="present">Present</option>
+                        <option value="future">Future</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="yearRangeSlider">Year Range:</label>
+                    <div id="yearRangeSlider"></div>
+                    <p>Selected Year: <span id="yearRangeLabel"></span></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="priceRangeSlider">Price Range:</label>
+                    <div id="priceRangeSlider"></div>
+                    <p>Selected Price: <span id="priceRangeLabel"></span></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantityRangeSlider">Quantity Range:</label>
+                    <div id="quantityRangeSlider"></div>
+                    <p>Selected Quantity: <span id="quantityRangeLabel"></span></p>
+                </div>
+
+                <button class="btn btn-primary option-button" id="apply-filters-btn">Apply Filters</button>
+            </div>
         </div>
     </div>
 
@@ -49,7 +94,8 @@
 
 <div id="footer-container"></div>
 
-
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/admin-console/products-management/js/products-management.js"></script>
 <script src="/navbar/js/navbar.js"></script>
 <script src="/footer/js/footer.js"></script>

@@ -157,6 +157,33 @@ const itemController = {
             res.status(500).send({ status: 'Error', message: 'Error fetching price range' });
         }
     },
+    async getRangeValues(req, res) {
+        try {
+            const result = await itemModel.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        minYear: { $min: "$year" },
+                        maxYear: { $max: "$year" },
+                        minPrice: { $min: "$price" },
+                        maxPrice: { $max: "$price" },
+                        minQuantity: { $min: "$quantity" },
+                        maxQuantity: { $max: "$quantity" }
+                    }
+                }
+            ]);
+
+            if (!result || result.length === 0) {
+                return res.status(404).send({ status: 'Error', message: 'No items found' });
+            }
+
+            const { minYear, maxYear, minPrice, maxPrice, minQuantity, maxQuantity } = result[0];
+            res.status(200).send({ status: 'Success', minYear, maxYear, minPrice, maxPrice, minQuantity, maxQuantity });
+        } catch (error) {
+            console.error('Error fetching range values:', error);
+            res.status(500).send({ status: 'Error', message: 'Error fetching range values' });
+        }
+    }
 }
 
 module.exports = itemController;

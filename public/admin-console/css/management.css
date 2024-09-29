@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+    padding-bottom: 100px;
+}
+
 .container {
     margin-top: 40px;
 }
@@ -22,6 +27,18 @@
     align-items: center;
 }
 
+.option-button,
+.option-button:focus,
+.option-button:active{
+    background-color: #5cb85c;
+    border: #5cb85c;
+}
+
+.option-button:hover {
+    background-color: #4a944a;
+    border: #4a944a;
+}
+
 table {
     table-layout: fixed;
     width: 100%;
@@ -30,4 +47,13 @@ table {
 th, td {
     word-wrap: break-word;
     text-align: left;
+}
+
+#yearRangeSlider, #priceRangeSlider, #quantityRangeSlider {
+    width: 100%;  /* Adjust the slider width */
+    margin-bottom: 20px;  /* Add spacing */
+}
+
+#advancedFilterContainer {
+    margin-top: 20px;
 }

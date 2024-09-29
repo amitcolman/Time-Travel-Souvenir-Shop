@@ -11,6 +11,7 @@ router.delete('/delete', authAdminVerifier, itemController.deleteItem )
 router.get('/list', itemController.listItems)
 router.get('/countries', itemController.listCountries)
 router.get('/price-range', itemController.getPriceRange);
+router.get('/range-values', authAdminVerifier, itemController.getRangeValues)
 
 
 module.exports = router;

@@ -185,22 +185,17 @@ function renderBarChart(svgId, data, labelField, valueField) {
 function renderTable(containerId, data, columns) {
     const container = d3.select(containerId);
 
-    // Clear any previous table content
     container.html('');
 
-    // Create the table
     const table = container.append('table').attr('class', 'table table-striped');
 
-    // Create the table header
     const thead = table.append('thead').append('tr');
     columns.forEach(column => {
         thead.append('th').text(column.label);
     });
 
-    // Create the table body
     const tbody = table.append('tbody');
 
-    // Populate table rows
     data.forEach(d => {
         const row = tbody.append('tr');
         columns.forEach(column => {
@@ -241,11 +236,10 @@ loadData('/dashboards/top-ancient-items', function (data) {
 loadData('/dashboards/top-branches', function (data) {
 
     const columns = [
-        { key: 'branch', label: 'Branch' },
-        { key: 'totalOrders', label: 'Total Orders' }
+        {key: 'branch', label: 'Branch'},
+        {key: 'totalOrders', label: 'Total Orders'}
     ];
 
-    // Render the table in the container
     renderTable("#top-branches-table", data, columns);
 });
 
