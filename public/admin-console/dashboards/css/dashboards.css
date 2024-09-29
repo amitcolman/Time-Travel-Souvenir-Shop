@@ -55,19 +55,6 @@ h3 {
     stroke: #fff;
 }
 
-#user-type-chart-legend,
-#top-users-chart-legend,
-#items-country-chart-legend,
-#expensive-items-chart-legend,
-#ancient-items-chart-legend,
-#items-branch-chart-legend,
-#sales-branch-chart-legend,
-#top-branches-table-legend {
-    text-align: left !important;  /* Ensure that the entire legend container is left-aligned */
-    display: block !important;    /* Prevent any flex or grid behaviors */
-    margin-top: 10px;
-}
-
 /* Legend styles */
 .legend-item {
     margin-top: 10px;
