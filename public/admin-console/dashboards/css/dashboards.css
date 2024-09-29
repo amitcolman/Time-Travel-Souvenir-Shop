@@ -13,7 +13,7 @@ body {
 }
 
 .dashboard-panel {
-    flex: 1 1 calc(33.333% - 25px); /* Adjusts width to fit 3 panels per row */
+    flex: 1 1 calc(33.333% - 25px);
     min-width: 300px;
     max-width: 400px;
     box-sizing: border-box;
@@ -29,7 +29,7 @@ body {
 }
 
 svg {
-    width: 100%; /* Let SVG fill the panel */
+    width: 100%;
     height: auto;
     max-height: 400px;
 }
@@ -55,7 +55,7 @@ h3 {
     stroke: #fff;
 }
 
-/* Legend styles */
+
 .legend-item {
     margin-top: 10px;
     display: flex;
@@ -68,10 +68,10 @@ h3 {
     width: 10px;
     height: 10px;
     margin-right: 10px;
-    background-color: #007bff; /* Default color for bar charts */
+    background-color: #007bff;
 }
 
-/* Pie chart text inside slices */
+
 .pie-text {
     text-anchor: middle;
     font-size: 10px;

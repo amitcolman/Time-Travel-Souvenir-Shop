@@ -7,7 +7,7 @@ body {
     margin-top: 40px;
 }
 
-/* Table sorting styles */
+
 .sortable {
     cursor: pointer;
 }
@@ -20,7 +20,7 @@ body {
     margin-left: 5px;
 }
 
-/* Dropdown container for period filter */
+
 .dropdown-container {
     position: relative;
     display: flex;
@@ -50,8 +50,8 @@ th, td {
 }
 
 #yearRangeSlider, #priceRangeSlider, #quantityRangeSlider {
-    width: 100%;  /* Adjust the slider width */
-    margin-bottom: 20px;  /* Add spacing */
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 #advancedFilterContainer {

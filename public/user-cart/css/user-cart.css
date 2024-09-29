@@ -43,9 +43,9 @@
 
 #cart-items {
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to new lines */
-    justify-content: center; /* Center items horizontally */
-    gap: 15px; /* Add spacing between cart items */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
 }
 
 
