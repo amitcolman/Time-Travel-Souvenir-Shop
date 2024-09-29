@@ -134,8 +134,8 @@ $(document).ready(function () {
 
             return matchesCountry && matchesPeriod && matchesYear && matchesPrice && matchesQuantity;
         });
-
         renderTable(filteredProducts);
+        $('#advancedFilterContainer').collapse('toggle');
     }
 
     function toggleSort(column) {
