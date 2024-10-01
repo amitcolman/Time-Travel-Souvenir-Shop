@@ -30,6 +30,7 @@ $(document).ready(function () {
     });
 
     $('#apply-filters-btn').on('click', applyFilters);
+    $('#clear-filters-btn').on('click', clearFilters);
 
     function loadProducts() {
         $.ajax({
@@ -136,6 +137,37 @@ $(document).ready(function () {
         });
         renderTable(filteredProducts);
         $('#advancedFilterContainer').collapse('toggle');
+        $('#clear-filters-btn').show();
+    }
+
+    function clearFilters() {
+        // Clear text input and reset select inputs
+        $('#filter-country').val('');
+        $('#filter-period').val('all');
+
+        // Reset sliders
+        const yearMin = $('#yearRangeSlider').slider("option", "min");
+        const yearMax = $('#yearRangeSlider').slider("option", "max");
+        $('#yearRangeSlider').slider("values", [yearMin, yearMax]);
+        $('#yearRangeLabel').text(`${yearMin} - ${yearMax}`);
+
+        const priceMin = $('#priceRangeSlider').slider("option", "min");
+        const priceMax = $('#priceRangeSlider').slider("option", "max");
+        $('#priceRangeSlider').slider("values", [priceMin, priceMax]);
+        $('#priceRangeLabel').text(`$${priceMin} - $${priceMax}`);
+
+        const quantityMin = $('#quantityRangeSlider').slider("option", "min");
+        const quantityMax = $('#quantityRangeSlider').slider("option", "max");
+        $('#quantityRangeSlider').slider("values", [quantityMin, quantityMax]);
+        $('#quantityRangeLabel').text(`${quantityMin} - ${quantityMax}`);
+
+        // Reset filtered products to all products
+        filteredProducts = [...productsData];
+        renderTable(filteredProducts);
+
+        $('#advancedFilterContainer').collapse('toggle');
+        // Hide the Clear Filters button
+        $('#clear-filters-btn').hide();
     }
 
     function toggleSort(column) {
