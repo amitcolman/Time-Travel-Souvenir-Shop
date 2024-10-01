@@ -1,21 +1,24 @@
+#items-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.item-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    padding: 10px;
+    width: calc(33% - 60px);
+    transition: transform 0.2s;
+}
 
 .item-card:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .item-name {
@@ -37,7 +40,69 @@
     object-fit: cover;
 }
 
-.filter-options {
+.btn-primary {
+    background-color: #198653;
+    border-color: #198653;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #145a41;
+    border-color: #145a41;
+}
+
+
+#filter-options {
+    background-color: #f4f4f4;
     position: sticky;
-    top: 0;
+    top: 20px;
+    align-self: flex-start;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+#filterHeader h5 {
+    color: #6c757d;
+}
+
+#filterHeader .btn-link {
+    color: #198653;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#filterHeader .btn-link:hover {
+    color: #145a41;
+}
+
+
+.form-group label {
+    color: #6c757d;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    border: 1px solid #6c757d;
+    background-color: white;
+    color: #198653;
+}
+
+.form-control:focus {
+    border-color: #198653;
+    box-shadow: none;
+}
+
+.price-filter {
+    margin-top: 20px;
+    color: #6c757d;
+}
+
+
+.price-filter p span {
+    font-weight: bold;
+    color: #198653;
 }

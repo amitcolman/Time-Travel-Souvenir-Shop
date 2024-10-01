@@ -105,11 +105,6 @@ function applyFilters() {
 }
 
 
-function toggleFilter() {
-    $('#filterContainer').collapse('toggle');
-}
-
-
 function fetchItems(filters = {}) {
     const queryParams = $.param(filters);
     const url = `${REMOTE_URL}/items/list${queryParams ? `?${queryParams}` : ''}`;
@@ -129,16 +124,18 @@ function fetchItems(filters = {}) {
 
 function renderItems(items) {
     products.empty()
-    let itemsHtml = items.map(item => `
-        <div class="item-card col-md-4" data-item-name="${item.itemName}">
-            <img src="img/${item.picture}" class="card-img-top" alt="${item.itemName}">
+    let itemsHtml = items.map(item => {
+        let isOutOfStock = item.quantity < 1;
+        return `
+        <div class="item-card col-md-4">
+            <img src="img/${item.picture}" class="card-img-top ${isOutOfStock ? 'out-of-stock-img' : ''}" alt="${item.itemName}">
             <div class="card-body">
-                <h5 class="item-name">${item.itemName}</h5>
-                 <p class="item-price">${item.price.toFixed(2)}₪</p>
-                <button class="btn btn-main add-to-cart-btn" data-item-name="${item.itemName}" >Add to Cart</button>
+                <h5 class="item-name">${item.itemName} ${isOutOfStock ? '(Out of Stock)' : ''}</h5>
+                <p class="item-price">${item.price.toFixed(2)}₪</p>
+                <button class="btn ${isOutOfStock ? 'btn-disabled' : 'btn-success'} add-to-cart-btn" data-item-name="${item.itemName}" ${isOutOfStock ? 'Out of stock' : ''}>${isOutOfStock ? 'Unavailable' : 'Add to Cart'}</button>
             </div>
-        </div>`
-    ).join('');
+        </div>`;
+    }).join('');
 
     products.append(itemsHtml);
 }
@@ -146,10 +143,10 @@ function renderItems(items) {
 
 function fetchItemDetails(itemName) {
     $.ajax({
-        url: `${REMOTE_URL}/items/get?itemName=${itemName}`,  
+        url: `${REMOTE_URL}/items/get?itemName=${itemName}`,
         method: 'GET',
         success: function(item) {
-            showItemDetails(item.item);  
+            showItemDetails(item.item);
         },
         error: function(error) {
             console.error('Error fetching item details', error);
@@ -187,31 +184,35 @@ function addToCart(itemName, buttonElement){
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({"itemName":itemName}),
-        success: function(data) {
+        success: function() {
             $(buttonElement).text('Item added to cart')
-            $(buttonElement).removeClass('btn-main').addClass('btn-added')
+            $(buttonElement).removeClass('btn-success').addClass('btn-added')
             $(buttonElement).prop('disabled', true);
         },
         error: function(error) {
-            if (error.statusCode === 401) {
+            if (error.status === 403) {
                 $(buttonElement).text('Log in to add to cart');
+                $(buttonElement).removeClass('btn-success').addClass('btn-error');
+            } else if (error.status === 400) {
+                $(buttonElement).text('Item already in cart');
                 $(buttonElement).removeClass('btn-success').addClass('btn-error');
             } else {
                 $(buttonElement).text('Failed to add to cart. Please can try again later.');
-                $(buttonElement).removeClass('btn-main').addClass('btn-error');
+                $(buttonElement).removeClass('btn-success').addClass('btn-error');
             }
+            $(buttonElement).prop('disabled', true);
 
             setTimeout(function() {
                 $(buttonElement).text('Add to Cart');
-                $(buttonElement).removeClass('btn-error').addClass('btn-main');
+                $(buttonElement).removeClass('btn-error').addClass('btn-success');
                 $(buttonElement).prop('disabled', false);
             }, 5000);
         }
     });
 }
 
-products.on('click', '.item-card', function () {
-    let itemName = $(this).data('itemName');
+products.on('click', '.item-card img', function () {
+    let itemName = $(this).attr('alt');
     fetchItemDetails(itemName);
 });
 
