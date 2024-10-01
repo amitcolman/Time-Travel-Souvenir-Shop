@@ -1,18 +1,6 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+body {
+    padding-bottom: 100px;
+}
 
 .item-card:hover {
     transform: scale(1.05);
