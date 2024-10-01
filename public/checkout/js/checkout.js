@@ -1,10 +1,9 @@
 $(document).ready(function () {
-    const REMOTE_URL = 'http://localhost:3000';
 
     async function getItemData(item) {
         try {
             const response = await $.ajax({
-                url: `${REMOTE_URL}/items/get?itemName=${encodeURIComponent(item)}`,
+                url: `/items/get?itemName=${encodeURIComponent(item)}`,
                 method: 'GET',
                 dataType: 'json'
             });
@@ -28,12 +27,12 @@ $(document).ready(function () {
                 item_names.push(item);
 
                 await $.ajax({
-                    url: `${REMOTE_URL}/items/quantity-remove-one?itemName=${item}`,
+                    url: `/items/quantity-remove-one?itemName=${item}`,
                     method: 'GET'
                 });
 
                 await $.ajax({
-                    url: `${REMOTE_URL}/cart/remove?itemName=${item}`,
+                    url: `/cart/remove?itemName=${item}`,
                     method: 'DELETE'
                 });
 
@@ -84,7 +83,7 @@ $(document).ready(function () {
 
         try {
             const cartResponse = await $.ajax({
-                url: `${REMOTE_URL}/cart/get`,
+                url: `/cart/get`,
                 method: 'GET',
                 dataType: 'json'
             });
@@ -93,7 +92,7 @@ $(document).ready(function () {
                 const { cart_data, totalPrice, item_names } = await processCartItems(cartResponse.cart);
 
                 await $.ajax({
-                    url: `${REMOTE_URL}/order/add`,
+                    url: `/order/add`,
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

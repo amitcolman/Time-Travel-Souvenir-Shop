@@ -1,5 +1,4 @@
 
-const REMOTE_URL = 'http://localhost:3000';
 let filterMinPrice = 0;
 let filterMaxPrice = 0;
 let products = $('#items-list')
@@ -7,7 +6,7 @@ let products = $('#items-list')
 
 function renderCountries(){
     $.ajax({
-        url: `${REMOTE_URL}/items/countries`,
+        url: `/items/countries`,
         method: 'GET',
         success: function(data) {
             data.countries.forEach(country => {
@@ -52,7 +51,7 @@ function renderPriceRange(){
     let minPrice = 1
     let maxPrice = 10000
     $.ajax({
-        url: `${REMOTE_URL}/items/price-range`,
+        url: `/items/price-range`,
         method: 'GET',
         success: function(data) {
             minPrice = data.minPrice;
@@ -92,7 +91,7 @@ function applyFilters() {
 
     const filters = {};
 
-    
+
     if (period && period !== 'all') filters.period = period;
     if (minYear) filters.minYear = minYear;
     if (maxYear) filters.minYear = maxYear;
@@ -107,12 +106,12 @@ function applyFilters() {
 
 function fetchItems(filters = {}) {
     const queryParams = $.param(filters);
-    const url = `${REMOTE_URL}/items/list${queryParams ? `?${queryParams}` : ''}`;
+    const url = `/items/list${queryParams ? `?${queryParams}` : ''}`;
     $.ajax({
         url: url,
         method: 'GET',
         success: function(data) {
-            renderItems(data.item);  
+            renderItems(data.item);
         },
         error: function(error) {
             console.error('Error fetching items', error);
@@ -143,7 +142,7 @@ function renderItems(items) {
 
 function fetchItemDetails(itemName) {
     $.ajax({
-        url: `${REMOTE_URL}/items/get?itemName=${itemName}`,
+        url: `/items/get?itemName=${itemName}`,
         method: 'GET',
         success: function(item) {
             showItemDetails(item.item);
@@ -171,7 +170,7 @@ function showItemDetails(item) {
 `;
 
     $('#item-details').html(itemDetailsHtml);
-    $('#add-to-cart-modal').data('item-name', item.itemName);
+    $('#add-to-cart-modal').data('data-item-name', item.itemName);
     let modal = new bootstrap.Modal(document.getElementById('itemModal'));
     modal.show();
 
@@ -180,7 +179,7 @@ function showItemDetails(item) {
 
 function addToCart(itemName, buttonElement){
     $.ajax({
-        url: `${REMOTE_URL}/cart/add`,
+        url: `/cart/add`,
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({"itemName":itemName}),

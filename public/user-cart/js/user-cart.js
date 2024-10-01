@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    const REMOTE_URL = 'http://localhost:3000';
     const $cartItemsContainer = $('#cart-items');
     const $cartMessage = $('#cart-message');
     const $checkoutButton = $('#checkout-button');
@@ -7,7 +6,7 @@ $(document).ready(function() {
 
     function removeCartItem(itemName, $itemElement) {
         $.ajax({
-            url: `${REMOTE_URL}/cart/remove?itemName=${itemName}`,
+            url: `/cart/remove?itemName=${itemName}`,
             method: 'DELETE',
             success: function() {
                 $itemElement.remove();
@@ -22,14 +21,14 @@ $(document).ready(function() {
 
     function loadItems(){
         $.ajax({
-            url: `${REMOTE_URL}/cart/get`,
+            url: `/cart/get`,
             method: 'GET',
             success: function(cartRes) {
                 $cartItemsContainer.empty();
                 if (cartRes.cart.length > 0) {
                     cartRes.cart.forEach(item => {
                         $.ajax({
-                            url: `${REMOTE_URL}/items/get?itemName=${item}`,
+                            url: `/items/get?itemName=${item}`,
                             method: 'GET',
                             success: function(itemRes) {
                                 const price = itemRes.item.price;
