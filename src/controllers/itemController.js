@@ -64,6 +64,20 @@ const itemController = {
     },
 
 
+    async quantityRemoveOne(req, res) {
+        try {
+            const item = await itemModel.findOneAndUpdate({itemName: req.query.itemName}, {$inc: {quantity: -1}}, {new: true});
+            if (!item) {
+                res.status(404).send({status: 'Error', message: 'Item not found'});
+                return;
+            }
+            res.status(200).send({status: 'Success', item: item});
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+            res.status(500).send({status: 'Error', message: 'Error updating quantity'});
+        }
+    },
+
     async deleteItem(req, res) {
         try {
             const item = await itemModel.findOneAndDelete({itemName: req.body.itemName});
