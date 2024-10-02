@@ -1,5 +1,6 @@
 $(document).ready(function () {
     let productsData = [];
+    let validCountries = [];
     let filteredProducts = [];
     let sortOrder = {
         name: 'asc',
@@ -13,6 +14,7 @@ $(document).ready(function () {
     loadProducts();
     loadPopups();
     loadFilterOptions();
+    loadCountryList();
 
     $('#sort-name').click(() => toggleSort('name'));
     $('#sort-country').click(() => toggleSort('country'));
@@ -52,6 +54,19 @@ $(document).ready(function () {
         });
     }
 
+    function loadCountryList() {
+        $.ajax({
+            url: 'https://restcountries.com/v3.1/all',
+            type: 'GET',
+            success: function (response) {
+                validCountries = response.map(country => country.name.common);
+            },
+            error: function () {
+                console.error('Error fetching country list');
+            }
+        });
+    }
+
     function loadPopups() {
         $.ajax({
             url: '/admin-console/popups.html',
@@ -72,45 +87,45 @@ $(document).ready(function () {
     }
 
     function loadFilterOptions() {
-        
-        $.ajax({
-            url: '/items/range-values',  
-            type: 'GET',
-            success: function(response) {
-                if (response.status === 'Success') {
-                    const { minYear, maxYear, minPrice, maxPrice, minQuantity, maxQuantity } = response;
 
-                    
+        $.ajax({
+            url: '/items/range-values',
+            type: 'GET',
+            success: function (response) {
+                if (response.status === 'Success') {
+                    const {minYear, maxYear, minPrice, maxPrice, minQuantity, maxQuantity} = response;
+
+
                     $('#yearRangeSlider').slider({
                         range: true,
                         min: minYear,
                         max: maxYear,
                         values: [minYear, maxYear],
-                        slide: function(event, ui) {
+                        slide: function (event, ui) {
                             $('#yearRangeLabel').text(`${ui.values[0]} : ${ui.values[1]}`);
                         }
                     });
                     $('#yearRangeLabel').text(`${minYear} : ${maxYear}`);
 
-                    
+
                     $('#priceRangeSlider').slider({
                         range: true,
                         min: minPrice,
                         max: maxPrice,
                         values: [minPrice, maxPrice],
-                        slide: function(event, ui) {
+                        slide: function (event, ui) {
                             $('#priceRangeLabel').text(`$${ui.values[0]} : $${ui.values[1]}`);
                         }
                     });
                     $('#priceRangeLabel').text(`$${minPrice} : $${maxPrice}`);
 
-                    
+
                     $('#quantityRangeSlider').slider({
                         range: true,
                         min: minQuantity,
                         max: maxQuantity,
                         values: [minQuantity, maxQuantity],
-                        slide: function(event, ui) {
+                        slide: function (event, ui) {
                             $('#quantityRangeLabel').text(`${ui.values[0]} : ${ui.values[1]}`);
                         }
                     });
@@ -119,7 +134,7 @@ $(document).ready(function () {
                     console.error('Error loading range values:', response.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.error('Error fetching range values:', error);
             }
         });
@@ -171,10 +186,10 @@ $(document).ready(function () {
     }
 
     function toggleSort(column) {
-        
+
         for (const key in sortOrder) {
             if (key !== column) {
-                sortOrder[key] = 'asc'; 
+                sortOrder[key] = 'asc';
             }
         }
 
@@ -279,7 +294,7 @@ $(document).ready(function () {
     function bindSaveProductButtons() {
         $('#save-new-product-btn').off('click').on('click', function () {
             const productData = getNewProductFormData();
-            if (!validateProductFormData(productData)) {
+            if (!validateProductFormData(productData) || !validateCountryInput(productData.country)) {
                 return;
             }
             $.ajax({
@@ -429,6 +444,14 @@ $(document).ready(function () {
         }
         if (!productData.quantity || isNaN(productData.quantity) || productData.quantity <= 0) {
             alert('Please enter a valid quantity.');
+            return false;
+        }
+        return true;
+    }
+
+    function validateCountryInput(country) {
+        if (!validCountries.includes(country)) {
+            alert('Invalid country. Please enter a valid country name.');
             return false;
         }
         return true;
