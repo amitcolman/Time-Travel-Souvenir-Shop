@@ -99,7 +99,14 @@
         <input type="number" id="add-product-price" class="form-control mb-3" placeholder="Price" required>
         <input type="number" id="add-product-quantity" class="form-control mb-3" placeholder="Quantity" required>
         <input type="text" id="add-product-image-name" class="form-control mb-3" placeholder="Image Name" required>
-        <input type="text" id="add-product-branch" class="form-control mb-3" placeholder="Branch" required>
+        <select id="add-product-branch" class="form-control mb-3" required>
+            <option value="" disabled selected>Select a branch</option>
+            <option value="Israel">Israel</option>
+            <option value="Antarctica">Antarctica</option>
+            <option value="Chile">Chile</option>
+            <option value="Mongolia">Mongolia</option>
+            <option value="Norway">Norway</option>
+        </select>
         <button id="save-new-product-btn" class="btn btn-primary">Save</button>
         <button id="cancel-new-product-btn" class="btn btn-secondary">Cancel</button>
     </div>

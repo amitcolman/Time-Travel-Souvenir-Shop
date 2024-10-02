@@ -416,12 +416,13 @@ $(document).ready(function () {
             price: $('#add-product-price').val(),
             quantity: $('#add-product-quantity').val(),
             picture: $('#add-product-image-name').val(),
-            branch: $('#add-product-branch').val()
+            branch: $('#add-product-branch option:selected').val()
         };
     }
 
     function validateProductFormData(productData) {
         const validBranches = ['Israel', 'Antarctica', 'Chile', 'Mongolia', 'Norway'];
+        const validPictureRegex = /^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$/i;
         if (!productData.itemName) {
             alert('Please enter the product name.');
             return false;
@@ -430,8 +431,12 @@ $(document).ready(function () {
             alert('Please enter the image name.');
             return false;
         }
+        if (!validPictureRegex.test(productData.picture)) {
+            alert('Invalid image name.');
+            return false;
+        }
         if (!validBranches.includes(productData.branch)) {
-            alert('Please enter a valid branch. Valid branches are: Israel, Antarctica, Chile, Mongolia, Norway.');
+            alert('Please enter a valid branch.');
             return false;
         }
         if (!productData.price || isNaN(productData.price) || productData.price <= 0) {
