@@ -3,9 +3,22 @@ const router = express.Router();
 const itemController = require('../src/controllers/itemController');
 const authAdminVerifier = require("../src/controllers/authAdminVerifier");
 const authUserVerifier = require('../src/controllers/authUserVerifier');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../public/products/img');
+    },
+    filename: function (req, file, cb) {
+        const productName = req.body.itemName.replace(/\s+/g, '_');
+        const extension = file.originalname.split('.').pop();
+        cb(null, `${productName}.${extension}`);
+    }
+});
+const upload = multer({ storage: storage });
 
 
-router.post('/create', authAdminVerifier, itemController.createItem);
+router.post('/create', authAdminVerifier, upload.single('picture') ,itemController.createItem);
 router.get('/get', itemController.getItem);
 router.post('/update-quantity', authAdminVerifier,  itemController.updateItemQuantity)
 router.get('/quantity-remove-one', authUserVerifier,  itemController.quantityRemoveOne)

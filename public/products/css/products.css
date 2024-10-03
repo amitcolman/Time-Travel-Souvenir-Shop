@@ -3,6 +3,10 @@
     flex-wrap: wrap;
     justify-content: space-between;
 }
+body {
+    margin: 0;
+    padding-bottom: 100px;
+}
 
 .item-card {
     display: flex;

@@ -294,14 +294,16 @@ $(document).ready(function () {
     function bindSaveProductButtons() {
         $('#save-new-product-btn').off('click').on('click', function () {
             const productData = getNewProductFormData();
-            if (!validateProductFormData(productData) || !validateCountryInput(productData.country)) {
+            if (!validateProductFormData(productData) || !validateCountryInput(productData.get('country'))) {
                 return;
             }
             $.ajax({
                 url: '/items/create',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(productData),
+                data: productData,
+                processData: false,
+                contentType: false,
                 success: function () {
                     togglePopup('#product-management-add-popup', false);
                     loadProducts();
@@ -408,46 +410,55 @@ $(document).ready(function () {
     }
 
     function getNewProductFormData() {
-        return {
-            itemName: $('#add-product-itemName').val(),
-            country: $('#add-product-country').val(),
-            period: $('#add-product-period').val(),
-            year: $('#add-product-year').val(),
-            price: $('#add-product-price').val(),
-            quantity: $('#add-product-quantity').val(),
-            picture: $('#add-product-image-name').val(),
-            branch: $('#add-product-branch option:selected').val()
-        };
+        const formData = new FormData();
+        formData.append('itemName', $('#add-product-itemName').val());
+        formData.append('country', $('#add-product-country').val());
+        formData.append('period', $('#add-product-period').val());
+        formData.append('year', $('#add-product-year').val());
+        formData.append('price', $('#add-product-price').val());
+        formData.append('quantity', $('#add-product-quantity').val());
+        formData.append( 'picture', $('#product-picture')[0].files[0]);
+        formData.append('branch', $('#add-product-branch option:selected').val());
+
+        return formData;
     }
 
     function validateProductFormData(productData) {
         const validBranches = ['Israel', 'Antarctica', 'Chile', 'Mongolia', 'Norway'];
         const validPictureRegex = /^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$/i;
-        if (!productData.itemName) {
+
+        const itemName = productData.get('itemName');
+        const picture = productData.get('picture') ? productData.get('picture').name : '';
+        const branch = productData.get('branch');
+        const price = productData.get('price');
+        const year = productData.get('year');
+        const quantity = productData.get('quantity');
+
+        if (!itemName) {
             alert('Please enter the product name.');
             return false;
         }
-        if (!productData.picture) {
-            alert('Please enter the image name.');
+        if (!picture) {
+            alert('Please upload product picture.');
             return false;
         }
-        if (!validPictureRegex.test(productData.picture)) {
+        if (!validPictureRegex.test(picture)) {
             alert('Invalid image name.');
             return false;
         }
-        if (!validBranches.includes(productData.branch)) {
+        if (!validBranches.includes(branch)) {
             alert('Please enter a valid branch.');
             return false;
         }
-        if (!productData.price || isNaN(productData.price) || productData.price <= 0) {
+        if (!price || isNaN(price) || price <= 0) {
             alert('Please enter a valid price.');
             return false;
         }
-        if (!productData.year || isNaN(productData.year)) {
+        if (!year || isNaN(year)) {
             alert('Please enter a valid year.');
             return false;
         }
-        if (!productData.quantity || isNaN(productData.quantity) || productData.quantity <= 0) {
+        if (!quantity || isNaN(quantity) || quantity <= 0) {
             alert('Please enter a valid quantity.');
             return false;
         }

@@ -1,4 +1,7 @@
 const itemModel = require('../models/itemModel');
+const fs = require('fs');
+const path = require('path');
+
 
 const itemController = {
     async createItem(req, res) {
@@ -8,7 +11,7 @@ const itemController = {
         let year = req.body.year;
         let price = req.body.price;
         let quantity = req.body.quantity;
-        let picture = req.body.picture;
+        let picture = req.file.filename;
         let branch = req.body.branch;
 
         
@@ -37,7 +40,6 @@ const itemController = {
             res.status(500).send({status: 'Error', message: 'Error adding item'});
         });
     },
-
 
     async getItem(req, res) {
         const item = await itemModel.findOne({itemName: req.query.itemName});
@@ -85,6 +87,14 @@ const itemController = {
                 res.status(404).send({status: 'Error', message: 'Item not found'});
                 return;
             }
+
+            const picturePath = path.join(__dirname, '..', 'public', 'products', 'img', item.picture);
+            fs.unlink(picturePath, (err) => {
+                if (err) {
+                    console.error('Error deleting the image file:', err);
+                }
+            });
+
             res.status(200).send({status: 'Success', item: item});
         } catch (error) {
             console.error('Error deleting item:', error);
