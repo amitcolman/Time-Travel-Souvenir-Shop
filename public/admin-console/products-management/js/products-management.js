@@ -114,10 +114,10 @@ $(document).ready(function () {
                         max: maxPrice,
                         values: [minPrice, maxPrice],
                         slide: function (event, ui) {
-                            $('#priceRangeLabel').text(`$${ui.values[0]} : $${ui.values[1]}`);
+                            $('#priceRangeLabel').text(`${ui.values[0]}₪ : ${ui.values[1]}₪`);
                         }
                     });
-                    $('#priceRangeLabel').text(`$${minPrice} : $${maxPrice}`);
+                    $('#priceRangeLabel').text(`${minPrice}₪ : ${maxPrice}₪`);
 
 
                     $('#quantityRangeSlider').slider({
@@ -169,7 +169,7 @@ $(document).ready(function () {
         const priceMin = $('#priceRangeSlider').slider("option", "min");
         const priceMax = $('#priceRangeSlider').slider("option", "max");
         $('#priceRangeSlider').slider("values", [priceMin, priceMax]);
-        $('#priceRangeLabel').text(`$${priceMin} - $${priceMax}`);
+        $('#priceRangeLabel').text(`${priceMin}₪ - ${priceMax}₪`);
 
         const quantityMin = $('#quantityRangeSlider').slider("option", "min");
         const quantityMax = $('#quantityRangeSlider').slider("option", "max");
