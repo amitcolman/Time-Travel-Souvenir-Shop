@@ -37,6 +37,17 @@
     animation: spin 8000ms linear infinite;
 }
 
+.btn-primary {
+    background-color: #198653;
+    border-color: #198653;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #145a41;
+    border-color: #145a41;
+}
+
 .extra-space {
     margin-bottom: 200px;
 }
