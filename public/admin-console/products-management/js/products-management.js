@@ -417,7 +417,7 @@ $(document).ready(function () {
         formData.append('year', $('#add-product-year').val());
         formData.append('price', $('#add-product-price').val());
         formData.append('quantity', $('#add-product-quantity').val());
-        formData.append( 'picture', $('#product-picture')[0].files[0]);
+        formData.append( 'picture', $('#add-product-picture')[0].files[0]);
         formData.append('branch', $('#add-product-branch option:selected').val());
 
         return formData;
