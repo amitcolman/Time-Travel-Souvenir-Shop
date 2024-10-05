@@ -50,8 +50,11 @@ $(document).ready(function () {
             type: 'GET',
             dataType: 'html',
             success: function (data) {
+                const $html = $('<div>').html(data);
+                const relevantPopups = $html.find('#delete-confirmation-popup, #change-password-popup, #auth-popup, #password-policy-error-popup,' +
+                    '#password-success-popup, #delete-success-popup, #delete-error-popup, #role-change-success-popup, #role-change-error-popup');
                 $('.popup-container').remove();
-                $('body').append(data);
+                $('body').append(relevantPopups);
             },
             error: function (error) {
                 console.error('Error loading pop-ups:', error);
