@@ -40,20 +40,19 @@ body {
     width: 100%;
     height: auto;
     border-radius: 8px 8px 8px 8px;
-    border: 5px solid #198653;
+    border: 5px solid #5cb85c;
     object-fit: cover;
 }
 
 .btn-primary {
-    background-color: #198653;
-    border-color: #198653;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
     color: white;
-    font-weight: bold;
 }
 
 .btn-primary:hover {
-    background-color: #145a41;
-    border-color: #145a41;
+    background-color: #4cae4c;
+    border-color: #4cae4c;
 }
 
 
@@ -73,13 +72,13 @@ body {
 }
 
 #filterHeader .btn-link {
-    color: #198653;
+    color: #5cb85c;
     font-weight: bold;
     text-decoration: none;
 }
 
 #filterHeader .btn-link:hover {
-    color: #145a41;
+    color: #4cae4c;
 }
 
 
@@ -108,5 +107,5 @@ body {
 
 .price-filter p span {
     font-weight: bold;
-    color: #198653;
+    color: #145a41;
 }
