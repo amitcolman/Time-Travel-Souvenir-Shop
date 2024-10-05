@@ -51,9 +51,38 @@ const itemController = {
     },
 
 
-    async updateItemQuantity(req, res) {
+    async updateItem(req, res) {
         try {
-            const item = await itemModel.findOneAndUpdate({itemName: req.body.itemName}, {quantity: req.body.quantity}, {new: true});
+            const updates = {};
+
+            if (req.body.period) {
+                updates.period = req.query.period;
+            }
+
+            if (req.body.year) {
+                updates.year = req.body.year;
+            }
+
+            if (req.body.branch) {
+                updates.branch = req.body.branch;
+            }
+
+            if (req.body.country) {
+                updates.country = req.query.country;
+            }
+
+            if (req.body.price) {
+                updates.price = req.body.price;
+            }
+
+            if (req.body.picture) {
+                updates.picture = req.body.picture;
+            }
+
+            if (req.body.quantity) {
+                updates.quantity = req.body.quantity;
+            }
+            const item = await itemModel.findOneAndUpdate({itemName: req.body.itemName}, updates, {new: true});
             if (!item) {
                 res.status(404).send({status: 'Error', message: 'Item not found'});
                 return;

@@ -38,14 +38,14 @@
 }
 
 .btn-primary {
-    background-color: #198653;
-    border-color: #198653;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #145a41;
-    border-color: #145a41;
+    background-color: #4cae4c;
+    border-color: #4cae4c;
 }
 
 .extra-space {

@@ -317,23 +317,27 @@ $(document).ready(function () {
 
         $('#save-edit-product-btn').off('click').on('click', function () {
             const newQuantity = $('#edit-product-quantity').val();
+            const newPrice = $('#edit-product-price').val();
             const itemName = $(this).data('itemName');
             if (!newQuantity || isNaN(newQuantity) || newQuantity <= 0) {
                 alert('Please enter a valid quantity.');
                 return;
             }
-
+            if (!newPrice || isNaN(newPrice) || newPrice <= 0) {
+                alert('Please enter a valid price.');
+                return;
+            }
             $.ajax({
-                url: '/items/update-quantity',
+                url: '/items/update',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({itemName: itemName, quantity: newQuantity}),
+                data: JSON.stringify({itemName: itemName, quantity: newQuantity, price: newPrice}),
                 success: function () {
                     togglePopup('#product-management-edit-popup', false);
                     loadProducts();
                 },
                 error: function (error) {
-                    console.error('Error updating product quantity:', error);
+                    console.error('Error updating product:', error);
                 }
             });
         });
@@ -382,6 +386,7 @@ $(document).ready(function () {
             togglePopup('#product-management-edit-popup', true);
             $('#product-modal-title').text('Edit Quantity');
             $('#edit-product-quantity').val(product.quantity);
+            $('#edit-product-price').val(product.price);
             $('#save-edit-product-btn').data('itemName', product.itemName);
         }
     }

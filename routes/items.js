@@ -18,9 +18,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-router.post('/create', authAdminVerifier, upload.single('picture') ,itemController.createItem);
+router.post('/create', authAdminVerifier, upload.single('picture'), itemController.createItem);
 router.get('/get', itemController.getItem);
-router.post('/update-quantity', authAdminVerifier,  itemController.updateItemQuantity)
+router.post('/update', authAdminVerifier, itemController.updateItem)
 router.get('/quantity-remove-one', authUserVerifier,  itemController.quantityRemoveOne)
 router.delete('/delete', authAdminVerifier, itemController.deleteItem )
 router.get('/list', itemController.listItems)
