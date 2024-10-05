@@ -131,7 +131,7 @@ function renderItems(items) {
             <div class="card-body">
                 <h5 class="item-name">${item.itemName} ${isOutOfStock ? '(Out of Stock)' : ''}</h5>
                 <p class="item-price">${item.price.toFixed(2)}₪</p>
-                <button class="btn ${isOutOfStock ? 'btn-disabled' : 'btn-success'} add-to-cart-btn" data-item-name="${item.itemName}" ${isOutOfStock ? 'Out of stock' : ''}>${isOutOfStock ? 'Unavailable' : 'Add to Cart'}</button>
+                <button class="btn ${isOutOfStock ? 'btn-disabled' : 'btn-primary'} add-to-cart-btn" data-item-name="${item.itemName}" ${isOutOfStock ? 'Out of stock' : ''}>${isOutOfStock ? 'Unavailable' : 'Add to Cart'}</button>
             </div>
         </div>`;
     }).join('');
@@ -185,25 +185,25 @@ function addToCart(itemName, buttonElement){
         data: JSON.stringify({"itemName":itemName}),
         success: function() {
             $(buttonElement).text('Item added to cart')
-            $(buttonElement).removeClass('btn-success').addClass('btn-added')
+            $(buttonElement).removeClass('btn-primary').addClass('btn-added')
             $(buttonElement).prop('disabled', true);
         },
         error: function(error) {
             if (error.status === 403) {
                 $(buttonElement).text('Log in to add to cart');
-                $(buttonElement).removeClass('btn-success').addClass('btn-error');
+                $(buttonElement).removeClass('btn-primary').addClass('btn-error');
             } else if (error.status === 400) {
                 $(buttonElement).text('Item already in cart');
-                $(buttonElement).removeClass('btn-success').addClass('btn-error');
+                $(buttonElement).removeClass('btn-primary').addClass('btn-error');
             } else {
                 $(buttonElement).text('Failed to add to cart. Please can try again later.');
-                $(buttonElement).removeClass('btn-success').addClass('btn-error');
+                $(buttonElement).removeClass('btn-primary').addClass('btn-error');
             }
             $(buttonElement).prop('disabled', true);
 
             setTimeout(function() {
                 $(buttonElement).text('Add to Cart');
-                $(buttonElement).removeClass('btn-error').addClass('btn-success');
+                $(buttonElement).removeClass('btn-error').addClass('btn-primary');
                 $(buttonElement).prop('disabled', false);
             }, 5000);
         }

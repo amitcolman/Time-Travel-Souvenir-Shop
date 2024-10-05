@@ -44,12 +44,17 @@ body {
 }
 
 .cart-item button {
-    background-color: #198653;
+    background-color: #5cb85c;;
     color: white;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.cart-item button:hover {
+    background-color: #4cae4c;
+    border-color: #4cae4c;
 }
 
 .cart-item .remove-btn {
@@ -68,15 +73,15 @@ body {
     margin-top: 30px;
     display: none;
     width: 200px;
-    background-color: #198653;
-    border-color: #198653;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
     color: white;
     font-weight: bold;
 }
 
 #checkout-button:hover {
-    background-color: #145a41;
-    border-color: #145a41;
+    background-color: #4cae4c;
+    border-color: #4cae4c;
 }
 
 #cart-message {
